@@ -1,0 +1,14 @@
+on: 
+  workflow_dispatch:
+    inputs:
+      image:
+        description: 'Image to inspect'
+        required: true
+        type: string
+
+jobs:
+  print-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect one
+        run: echo The image to inspect is ${{inputs.image}}
