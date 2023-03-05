@@ -21,41 +21,36 @@ def re_extract(regex: str, input: str):
     return match.group(1)
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("image", help="Image to inspect")
-    args = parser.parse_args()
+def inspect_image(image: str):
+    versions = {}
 
-    with redirect_stdout(sys.stderr):
-        versions = {}
+    with OCIContainer(image=image) as container:
+        pipx_list_output = (
+            container.call(["pipx", "list", "--short"], capture_output=True)
+            .strip()
+            .splitlines()
+        )
+        for line in pipx_list_output:
+            name, _, version = line.partition(" ")
+            versions[name] = version
 
-        with OCIContainer(image=args.image) as container:
-            pipx_list_output = (
-                container.call(["pipx", "list", "--short"], capture_output=True)
-                .strip()
-                .splitlines()
+        pythons = container.glob(ContainerPath("/opt/python/"), "*/bin/python")
+
+        versions["pipx"] = container.call(
+            ["pipx", "--version"], capture_output=True
+        ).strip()
+
+        versions["pythons"] = {}
+        for python_path in pythons:
+            python_identifier = re_extract(
+                r"/opt/python/(.*)/bin/python", str(python_path)
             )
-            for line in pipx_list_output:
-                name, _, version = line.partition(" ")
-                versions[name] = version
+            assert python_identifier
+            versions["pythons"][python_identifier] = inspect_python(
+                container, python_path, python_identifier
+            )
 
-            pythons = container.glob(ContainerPath("/opt/python/"), "*/bin/python")
-
-            versions["pipx"] = container.call(
-                ["pipx", "--version"], capture_output=True
-            ).strip()
-
-            versions["pythons"] = {}
-            for python_path in pythons:
-                python_identifier = re_extract(
-                    r"/opt/python/(.*)/bin/python", str(python_path)
-                )
-                assert python_identifier
-                versions["pythons"][python_identifier] = inspect_python(
-                    container, python_path, python_identifier
-                )
-
-    print(json.dumps(versions, indent=2))
+    return versions
 
 
 def inspect_python(
@@ -95,6 +90,17 @@ def inspect_python(
         versions[name] = version
 
     return versions
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("image", help="Image to inspect")
+    args = parser.parse_args()
+
+    with redirect_stdout(sys.stderr):
+        versions = inspect_image(args.image)
+
+    print(json.dumps(versions, indent=2))
 
 
 if __name__ == "__main__":

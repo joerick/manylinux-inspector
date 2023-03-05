@@ -5,8 +5,31 @@ import subprocess
 import sys
 import time
 
+from inspect_image import inspect_image
+
 PROJECT_DIR = Path(__file__).parent
 CACHE_DIR = PROJECT_DIR / "cache"
+
+
+def inspect_and_save(image: str, *, force: bool = False):
+    cache_filename = image.replace("/", "_").replace(":", "_") + ".json"
+    cache_file = CACHE_DIR / cache_filename
+
+    if cache_file.exists() and not force:
+        print("Already inspected, use `force` argument to re-inspect", file=sys.stderr)
+        return
+
+    inspect_data = inspect_image(image)
+
+    cache_file.write_text(json.dumps({
+        "metadata": {
+            "image": image,
+            "generated_at": time.time(),
+        },
+        "data": inspect_data,
+    }))
+
+    print(f"Done. Saved to {cache_file}", file=sys.stderr)
 
 
 def main():
@@ -17,26 +40,7 @@ def main():
     )
     args = parser.parse_args()
 
-    cache_filename = args.image.replace("/", "_").replace(":", "_") + ".json"
-    cache_file = CACHE_DIR / cache_filename
-
-    if cache_file.exists() and not args.force:
-        print("Already inspected, use --force to re-inspect", file=sys.stderr)
-        return
-
-    process = subprocess.run([sys.executable, "inspect_image.py", args.image], check=True, stdout=subprocess.PIPE)
-    inspect_data = json.loads(process.stdout)
-
-    cache_file.write_bytes(json.dumps({
-        "metadata": {
-            "image": args.image,
-            "generated_at": time.time(),
-        },
-        "data": inspect_data,
-    }))
-
-    print(f"Done. Saved to {cache_file}", file=sys.stderr)
-
+    return inspect_and_save(args.image, force=args.force)
 
 if __name__ == "__main__":
     main()

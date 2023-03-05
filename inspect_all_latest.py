@@ -1,13 +1,10 @@
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import datetime, timedelta
 import sys
 import time
 import requests
 import dateparser
-
-REPOSITORIES = [
-    "quay.io/openshift-release-dev/ocp-release",
-]
+from inspect_and_save import inspect_and_save
 
 
 @dataclass
@@ -73,12 +70,28 @@ def get_latest_image(repository: Repository) -> Image | None:
     return Image(repository=repository, tag=tag_name)
 
 
-def main():
-    for repo in get_repositories():
-        print(repo)
-        image = get_latest_image(repo)
-        print(image)
+def inspect_image_wrapper(image: Image):
+    print(f"Inspecting {image}", file=sys.stderr)
+    inspect_and_save(f'quay.io/{image.repository.namespace}/{image.repository.name}:{image.tag}')
+    print(f"Inspecting {image} complete.", file=sys.stderr)
 
+executor = ThreadPoolExecutor(max_workers=4)
+
+def main():
+    images_to_inspect = []
+
+    print("Fetching latest images...", file=sys.stderr)
+
+    for repo in get_repositories():
+        image = get_latest_image(repo)
+        if image:
+            images_to_inspect.append(image)
+
+    print(f"Found {len(images_to_inspect)} images to inspect", file=sys.stderr)
+    for image in images_to_inspect:
+        print(f" - {image}", file=sys.stderr)
+
+    executor.map(inspect_image_wrapper, images_to_inspect)
 
 if __name__ == "__main__":
     main()
