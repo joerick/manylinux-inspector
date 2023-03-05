@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import argparse
+from contextlib import redirect_stdout
 import json
 from pathlib import PurePosixPath
 import re
 import subprocess
+import sys
 from oci_container import OCIContainer
 
 ContainerPath = PurePosixPath
@@ -22,26 +26,34 @@ def main():
     parser.add_argument("image", help="Image to inspect")
     args = parser.parse_args()
 
-    versions = {}
-    with OCIContainer(image=args.image) as container:
-        pipx_list_output = container.call(["pipx", "list", "--short"], capture_output=True).strip().splitlines()
-        for line in pipx_list_output:
-            name, _, version = line.partition(' ')
-            versions[name] = version
+    with redirect_stdout(sys.stderr):
+        versions = {}
 
-        pythons = container.glob(ContainerPath("/opt/python/"), "*/bin/python")
+        with OCIContainer(image=args.image) as container:
+            pipx_list_output = (
+                container.call(["pipx", "list", "--short"], capture_output=True)
+                .strip()
+                .splitlines()
+            )
+            for line in pipx_list_output:
+                name, _, version = line.partition(" ")
+                versions[name] = version
 
-        versions["pipx"] = container.call(["pipx", "--version"], capture_output=True).strip()
-        
-        versions["pythons"] = {}
-        for python_path in pythons:
-            python_identifier = re_extract(
-                r"/opt/python/(.*)/bin/python", str(python_path)
-            )
-            assert python_identifier
-            versions["pythons"][python_identifier] = inspect_python(
-                container, python_path, python_identifier
-            )
+            pythons = container.glob(ContainerPath("/opt/python/"), "*/bin/python")
+
+            versions["pipx"] = container.call(
+                ["pipx", "--version"], capture_output=True
+            ).strip()
+
+            versions["pythons"] = {}
+            for python_path in pythons:
+                python_identifier = re_extract(
+                    r"/opt/python/(.*)/bin/python", str(python_path)
+                )
+                assert python_identifier
+                versions["pythons"][python_identifier] = inspect_python(
+                    container, python_path, python_identifier
+                )
 
     print(json.dumps(versions, indent=2))
 
@@ -49,7 +61,7 @@ def main():
 def inspect_python(
     container: OCIContainer, python_path: ContainerPath, python_identifier: str
 ):
-    versions: dict[str, str] = {}
+    versions: dict[str, str | None] = {}
     is_pypy = "pypy" in python_identifier
     if not is_pypy:
         versions["python"] = re_extract(
@@ -72,12 +84,14 @@ def inspect_python(
     )
     versions["pip"] = re_extract(r"pip (\S+)", pip_version_output)
 
-    pip_freeze_output = container.call(
-        [python_path, "-m", "pip", "freeze"], capture_output=True
-    ).strip().splitlines()
+    pip_freeze_output = (
+        container.call([python_path, "-m", "pip", "freeze"], capture_output=True)
+        .strip()
+        .splitlines()
+    )
 
     for line in pip_freeze_output:
-        name, _, version = line.partition('==')
+        name, _, version = line.partition("==")
         versions[name] = version
 
     return versions

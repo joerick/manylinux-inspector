@@ -72,7 +72,7 @@ class OCIContainer:
 
     def __enter__(self) -> OCIContainer:
 
-        self.name = f"cibuildwheel-{uuid.uuid4()}"
+        self.name = f"manylinuxinspector-{uuid.uuid4()}"
 
         # work-around for Travis-CI PPC64le Docker runs since 2021:
         # this avoids network splits
@@ -95,6 +95,7 @@ class OCIContainer:
                 *shell_args,
             ],
             check=True,
+            stdout=subprocess.DEVNULL,
         )
 
         self.process = subprocess.Popen(

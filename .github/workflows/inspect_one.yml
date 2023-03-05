@@ -10,5 +10,10 @@ jobs:
   print-tag:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
       - name: Inspect one
-        run: echo The image to inspect is ${{inputs.image}}
+        run: |
+          echo The image to inspect is ${{inputs.image}}
+          python inspect_and_save.py ${{inputs.image}}
