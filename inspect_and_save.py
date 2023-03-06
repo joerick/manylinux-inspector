@@ -27,7 +27,7 @@ def inspect_and_save(image: str, *, force: bool = False):
             "generated_at": time.time(),
         },
         "data": inspect_data,
-    }))
+    }, indent=2))
 
     print(f"Done. Saved to {cache_file}", file=sys.stderr)
 
