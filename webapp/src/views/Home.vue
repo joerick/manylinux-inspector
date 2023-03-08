@@ -1,8 +1,18 @@
 <script setup lang="ts">
 import reports from '@/data/reports.json';
 import {get, getManylinuxVersions} from '@/model'
+import Header from '@/components/Header.vue';
+import { computed, ref } from 'vue';
 
-const versions = getManylinuxVersions()
+
+const allVersions = getManylinuxVersions()
+const searchTerm = ref('')
+const versions = computed(() => {
+  return allVersions.filter(item => (
+    item.name.toLowerCase().includes(searchTerm.value.toLowerCase())
+    || item.tag.toLowerCase().includes(searchTerm.value.toLowerCase())
+  ))
+})
 
 function listKeypaths(object: any): string[] {
   const keypaths = [];
@@ -38,19 +48,29 @@ const fields = [
   ...extractFields(),
 ]
 
-function getRow(field: string) {
-  const result = [field]
-  for (const version of versions) {
-    result.push(version.getField(field))
-  }
-  return result
-}
+const rows = computed(() => {
+  const result = []
 
-const headings = ['', ...versions.map(item => `${item.name}:<br>${item.tag}`)]
-const rows = fields.map(getRow)
+  for (const field of fields) {
+      const row = [field, ...versions.value.map(version => version.getField(field))]
+      result.push(row)
+  }
+
+  return result
+})
+
+const headings = computed(() => {
+  return ['', ...versions.value.map(item => `${item.name}:<br>${item.tag}`)]
+})
+
 </script>
 
 <template>
+  <Header>
+    <template #right>
+      <input type="text" placeholder="Search images" v-model="searchTerm" />
+    </template>
+  </Header>
   <div class="home">
     <table>
       <thead>
@@ -79,5 +99,7 @@ table, th, td {
 }
 th {
   white-space: nowrap;
+  font-weight: 500;
 }
+
 </style>

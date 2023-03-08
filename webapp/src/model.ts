@@ -22,7 +22,6 @@ class ImageReport {
     getField(keypath: string): string {
         return get(this.data, keypath)?.toString() ?? '';
     }
-
 }
 
 class ManylinuxVersion {
@@ -56,7 +55,7 @@ interface ImageNameParts {
     tag: string,
 }
 function parseImageName(imageName: string): ImageNameParts {
-    const regex = /^(.*)\/(.*)\/(.*)_(.*):(.*)$/;
+    const regex = /^(?<domain>.*)\/(?<org>.*)\/(?<name>[a-z]*(?:\d|\d\d\d\d|(?:_\d+)+))_(?<arch>.*):(?<tag>.*)$/i;
     const match = imageName.match(regex);
     if (!match) {
         throw new Error(`Invalid image name: ${imageName}`);
