@@ -4,7 +4,7 @@ from pathlib import Path
 import jinja2
 
 BASE_DIR = Path(__file__).parent
-DATA_DIR = BASE_DIR / "cache"
+DATA_DIR = BASE_DIR / "data" / "reports"
 
 def combine_data():
     data = []
@@ -29,4 +29,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

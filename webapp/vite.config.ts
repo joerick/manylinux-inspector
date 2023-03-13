@@ -12,7 +12,7 @@ export default defineConfig({
       {
         name: 'import data',
         run: ['npm run data'],
-        pattern: ['../cache/*.json'],
+        pattern: ['../data/**/*.json'],
       },
     ], silent: false}),
   ],

@@ -1,5 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+import json
+from pathlib import Path
 import sys
 import time
 import requests
@@ -47,19 +49,19 @@ def get_latest_image(repository: Repository) -> Image | None:
     if not latest_tag:
         print(f'No "latest" tag found for {repository}', file=sys.stderr)
         return None
-    
+
     updated_timestamp = dateparser.parse(latest_tag["last_modified"])
     if not updated_timestamp:
         print(f'Unable to parse timestamp {latest_tag["last_modified"]}', file=sys.stderr)
         return None
-    
+
     time_since_update = time.time() - updated_timestamp.timestamp()
     ONE_YEAR = 365 * 24 * 60 * 60
 
     if time_since_update > ONE_YEAR:
         print(f'Image {repository}:latest is {time_since_update / 24 / 60 / 60:.0f} days old, ignoring', file=sys.stderr)
         return None
-    
+
     # find the tag whose manifest matches 'latest'
     tag_name = next(
         name
@@ -82,9 +84,12 @@ def main():
 
     print("Fetching latest images...", file=sys.stderr)
 
+    latest_images = {}
+
     for repo in get_repositories():
         image = get_latest_image(repo)
         if image:
+            latest_images[f'quay.io/{image.repository.namespace}/{image.repository.name}'] = image.tag
             images_to_inspect.append(image)
 
     print(f"Found {len(images_to_inspect)} images to inspect", file=sys.stderr)
@@ -92,6 +97,18 @@ def main():
         print(f" - {image}", file=sys.stderr)
 
     executor.map(inspect_image_wrapper, images_to_inspect)
+
+    print("Writing latest images...", file=sys.stderr)
+    latest_file = Path(__file__).parent / "data" / "latest.json"
+    latest_file.write_text(json.dumps({
+        "metadata": {
+            "generated_at": time.time(),
+        },
+        "data": latest_images,
+    }, indent=2))
+
+    print(f"Finished.", file=sys.stderr)
+
 
 if __name__ == "__main__":
     main()

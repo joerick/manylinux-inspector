@@ -8,20 +8,20 @@ import time
 from inspect_image import inspect_image
 
 PROJECT_DIR = Path(__file__).parent
-CACHE_DIR = PROJECT_DIR / "cache"
+REPORTS_DIR = PROJECT_DIR / "data" / "reports"
 
 
 def inspect_and_save(image: str, *, force: bool = False):
-    cache_filename = image.replace("/", "_").replace(":", "_") + ".json"
-    cache_file = CACHE_DIR / cache_filename
+    report_filename = image.replace("/", "_").replace(":", "_") + ".json"
+    report_file = REPORTS_DIR / report_filename
 
-    if cache_file.exists() and not force:
+    if report_file.exists() and not force:
         print("Already inspected, use `force` argument to re-inspect", file=sys.stderr)
         return
 
     inspect_data = inspect_image(image)
 
-    cache_file.write_text(json.dumps({
+    report_file.write_text(json.dumps({
         "metadata": {
             "image": image,
             "generated_at": time.time(),
@@ -29,7 +29,7 @@ def inspect_and_save(image: str, *, force: bool = False):
         "data": inspect_data,
     }, indent=2))
 
-    print(f"Done. Saved to {cache_file}", file=sys.stderr)
+    print(f"Done. Saved to {report_file}", file=sys.stderr)
 
 
 def main():

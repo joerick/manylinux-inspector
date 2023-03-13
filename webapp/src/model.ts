@@ -1,4 +1,12 @@
-import reportsData from '@/data/reports.json';
+import reportsDataUntyped from '@/data/reports.json';
+
+export const reportsData = reportsDataUntyped as {
+    reports: ReportData[],
+    latest: {
+        metadata: {generated_at: number},
+        data: {[repository: string]: string},
+    },
+}
 
 interface ReportData {
     metadata: {
@@ -34,6 +42,10 @@ class ManylinuxVersion {
         readonly tag: string,
     ) {}
 
+    get id(): string {
+        return `${this.domain}/${this.org}/${this.name}:${this.tag}`;
+    }
+
     addReport(report: ImageReport) {
         this.archs[report.nameInfo.arch] = report;
     }
@@ -44,6 +56,16 @@ class ManylinuxVersion {
             valueDict[arch] = this.archs[arch].getField(keypath)
         }
         return summariseValues(valueDict)
+    }
+
+    getKeypaths(): string[] {
+        const keypaths = new Set<string>();
+        for (const arch of Object.keys(this.archs)) {
+            for (const keypath of listKeypaths(this.archs[arch].data)) {
+                keypaths.add(keypath);
+            }
+        }
+        return Array.from(keypaths);
     }
 }
 
@@ -70,7 +92,7 @@ function parseImageName(imageName: string): ImageNameParts {
 }
 
 export function getManylinuxVersions(): ManylinuxVersion[] {
-    const reports = (reportsData as ReportData[]).map(d => new ImageReport(d));
+    const reports = reportsData.reports.map(d => new ImageReport(d));
     const versions: ManylinuxVersion[] = []
 
     for (const report of reports) {
@@ -130,4 +152,21 @@ function formatList(list: string[]): string {
         const last = list.pop();
         return `${list.join(', ')} and ${last}`;
     }
+}
+
+function listKeypaths(object: any): string[] {
+  const keypaths = [];
+  for (const key in object) {
+    if (object.hasOwnProperty(key)) {
+      if (typeof object[key] === 'object') {
+        const subkeypaths = listKeypaths(object[key]);
+        for (const subkeypath of subkeypaths) {
+          keypaths.push(key + '.' + subkeypath);
+        }
+      } else {
+        keypaths.push(key);
+      }
+    }
+  }
+  return keypaths;
 }
