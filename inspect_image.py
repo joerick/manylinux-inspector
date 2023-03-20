@@ -7,11 +7,19 @@ from contextlib import redirect_stdout
 import json
 from pathlib import PurePosixPath
 import re
+import shlex
 import subprocess
 import sys
-from oci_container import OCIContainer
+from typing import Callable, Sequence, TypedDict
+from oci_container import OCIContainer, PathOrStr
 
 ContainerPath = PurePosixPath
+
+
+class CommandLog(TypedDict):
+    command: list[str]
+    return_code: int
+    output: str
 
 
 def re_extract(regex: str, input: str):
@@ -22,68 +30,94 @@ def re_extract(regex: str, input: str):
 
 
 def inspect_image(image: str):
-    versions = {}
+    report = {}
+    commands_log: list[CommandLog] = []
 
     with OCIContainer(image=image) as container:
-        pipx_list_output = (
-            container.call(["pipx", "list", "--short"], capture_output=True)
-            .strip()
-            .splitlines()
-        )
+        def call(command: Sequence[PathOrStr], allow_fail=False, capture_stderr=False):
+            if capture_stderr:
+                actual_command = ["sh", "-c", f"{shlex.join(str(a) for a in command)} 2>&1"]
+            else:
+                actual_command = command
+
+            try:
+                output = container.call(actual_command, capture_output=True)
+                return_code = 0
+            except subprocess.CalledProcessError as e:
+                if not allow_fail:
+                    raise
+                output = e.output
+                return_code = e.returncode
+
+            commands_log.append(
+                {
+                    "command": list(str(arg) for arg in command),
+                    "return_code": return_code,
+                    "output": output,
+                }
+            )
+
+            return output
+
+        # os info
+        call(["cat", "/etc/os-release"], allow_fail=True)
+        call(["cat", "/etc/redhat-release"], allow_fail=True)
+
+        # libc info
+        call(["ldd", "--version"], capture_stderr=True)
+
+        pipx_list_output = call(["pipx", "list", "--short"]).strip().splitlines()
         for line in pipx_list_output:
             name, _, version = line.partition(" ")
-            versions[name] = version
+            report[name] = version
 
         pythons = container.glob(ContainerPath("/opt/python/"), "*/bin/python")
 
-        versions["pipx"] = container.call(
-            ["pipx", "--version"], capture_output=True
+        report["pipx"] = call(
+            ["pipx", "--version"],
         ).strip()
 
-        versions["pythons"] = {}
+        report["pythons"] = {}
         for python_path in pythons:
             python_identifier = re_extract(
                 r"/opt/python/(.*)/bin/python", str(python_path)
             )
             assert python_identifier
-            versions["pythons"][python_identifier] = inspect_python(
-                container, python_path, python_identifier
+            report["pythons"][python_identifier] = inspect_python(
+                call, python_path, python_identifier
             )
 
-    return versions
+    report["log"] = commands_log
+
+    return report
 
 
 def inspect_python(
-    container: OCIContainer, python_path: ContainerPath, python_identifier: str
+    call: Callable[[list[PathOrStr]], str],
+    python_path: ContainerPath,
+    python_identifier: str,
 ):
     versions: dict[str, str | None] = {}
     is_pypy = "pypy" in python_identifier
     if not is_pypy:
         versions["python"] = re_extract(
             r"Python (\S+)",
-            container.call([python_path, "--version"], capture_output=True),
+            call([python_path, "--version"]),
         )
     else:
         versions["python"] = re_extract(
             r"PyPy (\S+)",
-            container.call([python_path, "--version"], capture_output=True),
+            call([python_path, "--version"]),
         )
 
-    versions["setuptools"] = container.call(
+    versions["setuptools"] = call(
         [python_path, "-c", "import setuptools; print(setuptools.__version__)"],
-        capture_output=True,
     ).strip()
 
-    pip_version_output = container.call(
-        [python_path, "-m", "pip", "--version"], capture_output=True
-    )
+    pip_version_output = call([python_path, "-m", "pip", "--version"])
     versions["pip"] = re_extract(r"pip (\S+)", pip_version_output)
 
-    pip_freeze_output = (
-        container.call([python_path, "-m", "pip", "freeze"], capture_output=True)
-        .strip()
-        .splitlines()
-    )
+    pip_freeze_output = call([python_path, "-m", "pip", "freeze"]).strip().splitlines()
 
     for line in pip_freeze_output:
         name, _, version = line.partition("==")

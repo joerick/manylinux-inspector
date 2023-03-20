@@ -1,3 +1,4 @@
+import gzip
 import json
 from pathlib import Path
 
@@ -23,8 +24,14 @@ def main():
         "reports": reports,
         "latest": json.loads(LATEST_FILE.read_text()),
     }
+    json_data = json.dumps(frontend_data, indent=2)
+
     combined_file = WEBAPP_DIR / "src" / "data" / "reports.json"
-    combined_file.write_text(json.dumps(frontend_data, indent=2))
+    combined_file.write_text(json_data)
+
+    compressed_file = combined_file.with_suffix(".json.gz")
+    with gzip.open(compressed_file, 'w') as f:
+        f.write(json_data.encode('utf-8'))
 
 
 if __name__ == "__main__":
