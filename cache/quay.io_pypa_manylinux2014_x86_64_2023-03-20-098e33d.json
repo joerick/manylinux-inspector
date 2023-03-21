@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "image": "quay.io/pypa/manylinux2014_x86_64:2023-03-20-098e33d",
+    "generated_at": 1679373062.0468943
+  },
+  "data": {
+    "auditwheel": "5.3.0",
+    "cmake": "3.26.0",
+    "patchelf": "0.17.2.1",
+    "swig": "4.1.1",
+    "pipx": "1.2.0",
+    "pythons": {
+      "cp38-cp38": {
+        "python": "3.8.16",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0",
+        "tomli": "2.0.1"
+      },
+      "cp39-cp39": {
+        "python": "3.9.16",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0",
+        "tomli": "2.0.1"
+      },
+      "pp38-pypy38_pp73": {
+        "python": "7.3.11",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "cffi": "1.15.1",
+        "greenlet": "0.4.13",
+        "hpy": "0.0.4.dev179+g9b5d200",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0",
+        "readline": "6.2.4.1",
+        "tomli": "2.0.1"
+      },
+      "pp39-pypy39_pp73": {
+        "python": "7.3.11",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "cffi": "1.15.1",
+        "greenlet": "0.4.13",
+        "hpy": "0.0.4.dev179+g9b5d200",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0",
+        "readline": "6.2.4.1",
+        "tomli": "2.0.1"
+      },
+      "cp37-cp37m": {
+        "python": "3.7.16",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "importlib-metadata": "6.1.0",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0",
+        "tomli": "2.0.1",
+        "typing_extensions": "4.5.0",
+        "zipp": "3.15.0"
+      },
+      "cp36-cp36m": {
+        "python": "3.6.15",
+        "setuptools": "59.6.0",
+        "pip": "21.3.1",
+        "build": "0.9.0",
+        "importlib-metadata": "4.8.3",
+        "packaging": "21.3",
+        "pep517": "0.13.0",
+        "pyparsing": "3.0.9",
+        "tomli": "1.2.3",
+        "typing_extensions": "4.1.1",
+        "zipp": "3.6.0"
+      },
+      "cp311-cp311": {
+        "python": "3.11.2",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0"
+      },
+      "cp310-cp310": {
+        "python": "3.10.10",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0",
+        "tomli": "2.0.1"
+      },
+      "pp37-pypy37_pp73": {
+        "python": "7.3.9",
+        "setuptools": "67.6.0",
+        "pip": "23.0.1",
+        "build": "0.10.0",
+        "cffi": "1.15.0",
+        "greenlet": "0.4.13",
+        "hpy": "0.0.3",
+        "importlib-metadata": "6.1.0",
+        "packaging": "23.0",
+        "pyproject_hooks": "1.0.0",
+        "readline": "6.2.4.1",
+        "tomli": "2.0.1",
+        "typing_extensions": "4.5.0",
+        "zipp": "3.15.0"
+      }
+    }
+  }
+}
