@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "./views/Home.vue";
+import Grid from "./views/Grid.vue";
 import Raw from "./views/Raw.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [
-        { path: '/', component: Home },
+        { path: '/', component: Grid },
         { path: '/raw', component: Raw },
     ],
 })

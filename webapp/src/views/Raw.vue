@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import reports from '@/data/reports.json';
+import database from '@/data/reports.json';
 import {get} from '@/model'
 
 function listKeypaths(object: any): string[] {
@@ -21,7 +21,7 @@ function listKeypaths(object: any): string[] {
 
 function extractFields(): string[] {
   const headers = new Set<string>()
-  for (const item of reports) {
+  for (const item of database.reports) {
     const keypaths = listKeypaths(item.data)
     for (const keypath of keypaths) {
       headers.add(keypath)
@@ -38,13 +38,13 @@ const fields = [
 
 function getRow(field: string) {
   const result = [field]
-  for (const image of reports) {
+  for (const image of database.reports) {
     result.push(get(image.data, field))
   }
   return result
 }
 
-const headings = ['', ...reports.map(item => item.metadata.image)]
+const headings = ['', ...database.reports.map(item => item.metadata.image)]
 const rows = fields.map(getRow)
 </script>
 

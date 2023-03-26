@@ -134,11 +134,11 @@ export function summariseValues(valueDict: {[key: string]: string}): string {
     } else {
         if (valueCounts[0].keys.length > valueCounts[1].keys.length) {
             // we have the majority in one group, so just separate out the rest.
-            const rest = valueCounts.slice(1).map(c => `${c.value} on ${formatList(c.keys)}`).join(';')
+            const rest = valueCounts.slice(1).map(c => `${c.value} on ${formatList(c.keys)}`).join(', ')
             return `${valueCounts[0].value || 'None'} (${rest})`
         } else {
             // we have a tie, so just list all the values.
-            return valueCounts.map(c => `${c.value} on ${formatList(c.keys)}`).join(';')
+            return valueCounts.map(c => `${c.value} on ${formatList(c.keys)}`).join(', ')
         }
     }
 }

@@ -2,7 +2,8 @@
 import {get, getManylinuxVersions} from '@/model'
 import Header from '@/components/Header.vue';
 import { computed, ref } from 'vue';
-import {sortBy} from 'lodash'
+import sortBy from 'lodash/sortBy'
+import FixedHorizontalStickyVertical from '@/components/FixedHorizontalStickyVertical.vue';
 
 const allVersions = getManylinuxVersions()
 const searchTerm = ref('')
@@ -82,66 +83,36 @@ const sortedRows = computed(() => {
   return sortBy(annotatedWords, ['interpreter', 'major', 'minor', 'rest', 'keypath']).map(item => item.row)
 })
 
-
-// function extractFields(): string[] {
-//   const headers = new Set<string>()
-//   for (const item of reports) {
-//     const keypaths = listKeypaths(item.data)
-//     for (const keypath of keypaths) {
-//       headers.add(keypath)
-//     }
-//   }
-//   const result = Array.from(headers)
-//   result.sort()
-//   return result
-// }
-
-// const fields = [
-//   ...extractFields(),
-// ]
-
-// const rows = computed(() => {
-//   const result = []
-
-//   for (const field of fields) {
-//       const row = [field, ...versions.value.map(version => version.getField(field))]
-//       result.push(row)
-//   }
-
-//   return result
-// })
-
-// const headings = computed(() => {
-//   return ['', ...versions.value.map(item => `${item.name}:<br>${item.tag}`)]
-// })
-
 const visibleRows = computed(() => {
   return sortedRows.value.filter(row => {
-    if (row.keypath === 'pythons') {
+    if (row.keypath === 'pythons' || row.keypath === 'log') {
       return false
     }
-    if (row.parentId === null) {
-      return true
-    }
-    return expandedRowIds.value.has(row.parentId)
+    return true
   })
 })
 
 const rowsWithChildren = computed(() => {
   return new Set(rows.value.filter(row => row.parentId !== null).map(row => row.parentId!))
 })
+
 function displayName(row: Row): string {
   let match
-  if (match = row.keypath.match(/pythons\.cp(\d)(\d+)-.*/)) {
+  if (match = row.keypath.match(/^pythons\.cp(\d)(\d+)-[^\.]*$/)) {
     const major = match[1]
     const minor = match[2]
     const version = `${major}.${minor}`
-    return `CPython ${version}<br>${row.name}`
-  } else if (match = row.keypath.match(/pythons\.pp(\d)(\d+)-.*/)) {
+    if (major == '2' && minor == '7') {
+      // get the letters at the end of the id
+      const variant = row.keypath.match(/[a-z]+$/)![0]
+      return `Python ${version}<sub><i>${variant}</i></sub>`
+    }
+    return `CPython ${version}`
+  } else if (match = row.keypath.match(/^pythons\.pp(\d)(\d+)-[^\.]*$/)) {
     const major = match[1]
     const minor = match[2]
     const version = `${major}.${minor}`
-    return `PyPy ${version}<br>${row.name}`
+    return `PyPy ${version}`
   }
   return row.name
 }
@@ -161,18 +132,32 @@ function values(row: Row): {[versionId: string]: string} {
   }
   return row.values
 }
+function rowClicked(event: MouseEvent, row: Row) {
+  if (!rowsWithChildren.value.has(row.keypath)) {
+    return
+  }
+  event.preventDefault()
+  event.stopPropagation()
 
+  if (expandedRowIds.value.has(row.keypath)) {
+    expandedRowIds.value.delete(row.keypath)
+  } else {
+    expandedRowIds.value.add(row.keypath)
+  }
+}
 
 </script>
 
 <template>
-  <Header>
-    <template #right>
-      <input type="text" placeholder="Search images" v-model="searchTerm" />
-    </template>
-  </Header>
-  <div class="home">
-    <table  cellspacing="0">
+  <Header page="grid" />
+  <div class="grid">
+    <fixed-horizontal-sticky-vertical :height="35" :z-index="10" :sticky-top="0">
+      <div class="search-bar">
+        <img class="icon" src="@/assets/search-menu-icon.svg" alt="search-menu" role="button" />
+        <input type="text" placeholder="all" v-model="searchTerm" />
+      </div>
+    </fixed-horizontal-sticky-vertical>
+    <table cellspacing="0">
       <thead>
         <tr>
           <th></th>
@@ -182,7 +167,12 @@ function values(row: Row): {[versionId: string]: string} {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in visibleRows" :key="row.keypath">
+        <tr v-for="row in visibleRows"
+            :key="row.keypath"
+            :class="{parent: rowsWithChildren.has(row.keypath),
+                     expanded: expandedRowIds.has(row.keypath),
+                     hidden: row.parentId && !expandedRowIds.has(row.parentId)}"
+            @click="rowClicked($event, row)">
           <td>
             <span class="name" v-html="displayName(row)"></span>
           </td>
@@ -196,32 +186,120 @@ function values(row: Row): {[versionId: string]: string} {
 </template>
 
 <style lang="scss" scoped>
-table {
-  position: relative;
-  // border-collapse: collapse;
+.search-bar {
+  background-color: black;
+  padding: 0 36px;
+
+  display: flex;
+  gap: 10px;
+  height: 35px;
+
+  .icon {
+    width: 21px;
+    height: auto;
+  }
+  input[type="text"] {
+    flex: 1;
+
+    border: none;
+    background: none;
+    line-height: 35px;
+
+    color: white;
+    font-size: 14px;
+    text-align: left;
+    padding: 0;
+    outline: none;
+  }
 }
-table, th, td {
+table {
+  padding: 0;
+  text-align: left;
+}
+tbody {
+  vertical-align: top;
+}
+th, td {
   margin: 0;
   padding: 2px;
-  border: 1px solid #999;
   background: white;
+  max-width: 230px;
 }
 th {
   white-space: nowrap;
   font-weight: 500;
   position: sticky;
-  top: 0;
+  top: 35px;
+  z-index: 1;
   background: white;
-  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+  border-bottom: 2px solid #DBDBDB;
+  // box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+
+  font-weight: 600;
+  padding: 9px 8px;
 }
 td:first-child, th:first-child {
   position: sticky;
   left: 0;
+  z-index: 1;
   background: white;
   white-space: nowrap;
 }
 th:first-child {
-  z-index: 1;
+  z-index: 2;
+}
+tr.hidden {
+  visibility: collapse;
+}
+tr.parent {
+  td {
+    border-top: 1px solid #DBDBDB;
+  }
+  position: relative;
+
+  td {
+    padding: 16px 8px;
+  }
+
+  td:first-child {
+    padding-left: 27px;
+  }
+
+  td:first-child::after {
+    content: '';
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    background-image: url(@/assets/disclosure-triangle.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 9px;
+    top: 18px;
+  }
+  &.expanded td:first-child::after {
+    transform: rotate(90deg);
+  }
+
+  td .name {
+    font-weight: 600;
+  }
+  &:hover {
+    td {
+      background: #f1f2f3;
+    }
+  }
+}
+tr:not(.parent) {
+  td {
+    padding: 5px 8px;
+  }
+  td:first-child {
+    padding-left: 36px;
+  }
+}
+tr:last-child {
+  border-bottom: 1px solid #DBDBDB;
 }
 
 </style>
