@@ -287,6 +287,7 @@ tr.parent {
   &:hover {
     td {
       background: #f1f2f3;
+      cursor: pointer;
     }
   }
 }
