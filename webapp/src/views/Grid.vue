@@ -105,7 +105,7 @@ function displayName(row: Row): string {
     if (major == '2' && minor == '7') {
       // get the letters at the end of the id
       const variant = row.keypath.match(/[a-z]+$/)![0]
-      return `Python ${version}<sub><i>${variant}</i></sub>`
+      return `Python ${version}<span class="variant">${variant}</span>`
     }
     return `CPython ${version}`
   } else if (match = row.keypath.match(/^pythons\.pp(\d)(\d+)-[^\.]*$/)) {
@@ -251,6 +251,10 @@ th:first-child {
 tr.hidden {
   visibility: collapse;
 }
+
+:global(body.is-safari .grid table tr.hidden) {
+  display: none;
+}
 tr.parent {
   td {
     border-top: 1px solid #DBDBDB;
@@ -263,6 +267,11 @@ tr.parent {
 
   td:first-child {
     padding-left: 27px;
+    :deep(.variant) {
+      font-size: 9px;
+      font-weight: bold;
+      font-style: italic;
+    }
   }
 
   td:first-child::after {
@@ -302,5 +311,4 @@ tr:not(.parent) {
 tr:last-child {
   border-bottom: 1px solid #DBDBDB;
 }
-
 </style>
