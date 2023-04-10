@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {get, getManylinuxVersions} from '@/model'
+import {get, getManylinuxVersions} from '@/model/model/model.js'
 import Header from '@/components/Header.vue';
 import { computed, ref } from 'vue';
 import sortBy from 'lodash/sortBy'

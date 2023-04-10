@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import database from '@/data/reports.json';
-import {get} from '@/model'
+// import database from '@/data/reports.json';
+// import {get} from '@/model/model/model.js'
 
 function listKeypaths(object: any): string[] {
   const keypaths = [];
