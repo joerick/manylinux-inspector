@@ -1,0 +1,341 @@
+{
+  "metadata": {
+    "image": "quay.io/pypa/manylinux_2_24_s390x:2022-12-26-0d38463",
+    "generated_at": 1681163468.7745528
+  },
+  "data": {
+    "upgrading": "shared libraries...",
+    "auditwheel": "5.3.0",
+    "cmake": "3.25.0",
+    "patchelf": "0.17.0.0",
+    "swig": "4.1.1",
+    "pipx": "1.1.0",
+    "pythons": {
+      "cp36-cp36m": {
+        "python": "3.6.15",
+        "setuptools": "59.6.0",
+        "pip": "21.3.1",
+        "build": "0.9.0",
+        "importlib-metadata": "4.8.3",
+        "packaging": "21.3",
+        "pep517": "0.13.0",
+        "pyparsing": "3.0.9",
+        "tomli": "1.2.3",
+        "typing_extensions": "4.1.1",
+        "zipp": "3.6.0"
+      },
+      "cp310-cp310": {
+        "python": "3.10.9",
+        "setuptools": "65.6.3",
+        "pip": "22.3.1",
+        "build": "0.9.0",
+        "packaging": "22.0",
+        "pep517": "0.13.0",
+        "tomli": "2.0.1"
+      },
+      "cp38-cp38": {
+        "python": "3.8.16",
+        "setuptools": "65.6.3",
+        "pip": "22.3.1",
+        "build": "0.9.0",
+        "packaging": "22.0",
+        "pep517": "0.13.0",
+        "tomli": "2.0.1"
+      },
+      "cp37-cp37m": {
+        "python": "3.7.16",
+        "setuptools": "65.6.3",
+        "pip": "22.3.1",
+        "build": "0.9.0",
+        "importlib-metadata": "5.2.0",
+        "packaging": "22.0",
+        "pep517": "0.13.0",
+        "tomli": "2.0.1",
+        "typing_extensions": "4.4.0",
+        "zipp": "3.11.0"
+      },
+      "cp39-cp39": {
+        "python": "3.9.16",
+        "setuptools": "65.6.3",
+        "pip": "22.3.1",
+        "build": "0.9.0",
+        "packaging": "22.0",
+        "pep517": "0.13.0",
+        "tomli": "2.0.1"
+      },
+      "cp311-cp311": {
+        "python": "3.11.1",
+        "setuptools": "65.6.3",
+        "pip": "22.3.1",
+        "build": "0.9.0",
+        "packaging": "22.0",
+        "pep517": "0.13.0"
+      }
+    },
+    "log": [
+      {
+        "command": [
+          "cat",
+          "/etc/os-release"
+        ],
+        "return_code": 0,
+        "output": "PRETTY_NAME=\"Debian GNU/Linux 9 (stretch)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"9\"\nVERSION=\"9 (stretch)\"\nVERSION_CODENAME=stretch\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n"
+      },
+      {
+        "command": [
+          "cat",
+          "/etc/redhat-release"
+        ],
+        "return_code": 1,
+        "output": "cat: /etc/redhat-release: No such file or directory\n"
+      },
+      {
+        "command": [
+          "ldd",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "ldd (Debian GLIBC 2.24-11+deb9u4) 2.24\nCopyright (C) 2016 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\nWritten by Roland McGrath and Ulrich Drepper.\n"
+      },
+      {
+        "command": [
+          "pipx",
+          "list",
+          "--short"
+        ],
+        "return_code": 0,
+        "output": "upgrading shared libraries...\nauditwheel 5.3.0\ncmake 3.25.0\npatchelf 0.17.0.0\nswig 4.1.1\n"
+      },
+      {
+        "command": [
+          "pipx",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "1.1.0\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp36-cp36m/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "Python 3.6.15\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp36-cp36m/bin/python",
+          "-c",
+          "import setuptools; print(setuptools.__version__)"
+        ],
+        "return_code": 0,
+        "output": "59.6.0\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp36-cp36m/bin/python",
+          "-m",
+          "pip",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "pip 21.3.1 from /opt/python/cp36-cp36m/lib/python3.6/site-packages/pip (python 3.6)\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp36-cp36m/bin/python",
+          "-m",
+          "pip",
+          "freeze"
+        ],
+        "return_code": 0,
+        "output": "build==0.9.0\nimportlib-metadata==4.8.3\npackaging==21.3\npep517==0.13.0\npyparsing==3.0.9\ntomli==1.2.3\ntyping_extensions==4.1.1\nzipp==3.6.0\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "Python 3.10.9\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "-c",
+          "import setuptools; print(setuptools.__version__)"
+        ],
+        "return_code": 0,
+        "output": "65.6.3\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "-m",
+          "pip",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "pip 22.3.1 from /opt/python/cp310-cp310/lib/python3.10/site-packages/pip (python 3.10)\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "-m",
+          "pip",
+          "freeze"
+        ],
+        "return_code": 0,
+        "output": "build==0.9.0\npackaging==22.0\npep517==0.13.0\ntomli==2.0.1\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "Python 3.8.16\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "-c",
+          "import setuptools; print(setuptools.__version__)"
+        ],
+        "return_code": 0,
+        "output": "65.6.3\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "-m",
+          "pip",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "pip 22.3.1 from /opt/python/cp38-cp38/lib/python3.8/site-packages/pip (python 3.8)\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "-m",
+          "pip",
+          "freeze"
+        ],
+        "return_code": 0,
+        "output": "build==0.9.0\npackaging==22.0\npep517==0.13.0\ntomli==2.0.1\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp37-cp37m/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "Python 3.7.16\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp37-cp37m/bin/python",
+          "-c",
+          "import setuptools; print(setuptools.__version__)"
+        ],
+        "return_code": 0,
+        "output": "65.6.3\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp37-cp37m/bin/python",
+          "-m",
+          "pip",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "pip 22.3.1 from /opt/python/cp37-cp37m/lib/python3.7/site-packages/pip (python 3.7)\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp37-cp37m/bin/python",
+          "-m",
+          "pip",
+          "freeze"
+        ],
+        "return_code": 0,
+        "output": "build==0.9.0\nimportlib-metadata==5.2.0\npackaging==22.0\npep517==0.13.0\ntomli==2.0.1\ntyping_extensions==4.4.0\nzipp==3.11.0\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "Python 3.9.16\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "-c",
+          "import setuptools; print(setuptools.__version__)"
+        ],
+        "return_code": 0,
+        "output": "65.6.3\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "-m",
+          "pip",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "pip 22.3.1 from /opt/python/cp39-cp39/lib/python3.9/site-packages/pip (python 3.9)\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "-m",
+          "pip",
+          "freeze"
+        ],
+        "return_code": 0,
+        "output": "build==0.9.0\npackaging==22.0\npep517==0.13.0\ntomli==2.0.1\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "Python 3.11.1\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "-c",
+          "import setuptools; print(setuptools.__version__)"
+        ],
+        "return_code": 0,
+        "output": "65.6.3\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "-m",
+          "pip",
+          "--version"
+        ],
+        "return_code": 0,
+        "output": "pip 22.3.1 from /opt/python/cp311-cp311/lib/python3.11/site-packages/pip (python 3.11)\n"
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "-m",
+          "pip",
+          "freeze"
+        ],
+        "return_code": 0,
+        "output": "build==0.9.0\npackaging==22.0\npep517==0.13.0\n"
+      }
+    ]
+  }
+}
