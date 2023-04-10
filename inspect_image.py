@@ -34,7 +34,7 @@ def inspect_image(image: str):
     commands_log: list[CommandLog] = []
 
     with OCIContainer(image=image) as container:
-        def call(command: Sequence[PathOrStr], allow_fail=False, capture_stderr=False):
+        def call(command: Sequence[PathOrStr], allow_fail=False, capture_stderr=True):
             if capture_stderr:
                 actual_command = ["sh", "-c", f"{shlex.join(str(a) for a in command)} 2>&1"]
             else:
@@ -64,7 +64,7 @@ def inspect_image(image: str):
         call(["cat", "/etc/redhat-release"], allow_fail=True)
 
         # libc info
-        call(["ldd", "--version"], capture_stderr=True)
+        call(["ldd", "--version"])
 
         pipx_list_output = call(["pipx", "list", "--short"]).strip().splitlines()
         for line in pipx_list_output:
@@ -93,7 +93,7 @@ def inspect_image(image: str):
 
 
 def inspect_python(
-    call: Callable,
+    call: Callable[[Sequence[PathOrStr]], str],
     python_path: ContainerPath,
     python_identifier: str,
 ):
@@ -102,12 +102,12 @@ def inspect_python(
     if not is_pypy:
         versions["python"] = re_extract(
             r"Python (\S+)",
-            call([python_path, "--version"], capture_stderr=True),
+            call([python_path, "--version"]),
         )
     else:
         versions["python"] = re_extract(
             r"PyPy (\S+)",
-            call([python_path, "--version"], capture_stderr=True),
+            call([python_path, "--version"]),
         )
 
     versions["setuptools"] = call(
