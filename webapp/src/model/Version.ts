@@ -1,6 +1,6 @@
 import type { Field, ImageReportJSON } from "./ImageReport"
 import ImageReport from "./ImageReport"
-import { summariseValues } from "./util"
+import { cachedProperty, summariseValues } from "./util"
 
 export default class Version {
     reports: {[arch: string]: ImageReport} = {}
@@ -28,7 +28,10 @@ export default class Version {
     get name(): string { return this.versionJSON.metadata.name }
     get tag(): string { return this.versionJSON.metadata.tag }
 
+    _fields?: Field[]
     get fields(): Field[] {
+        if (this._fields) return this._fields
+
         const fieldsById = new Map<string, {[arch: string]: Field}>()
         for (const arch of Object.keys(this.reports)) {
             const report = this.reports[arch]
@@ -51,6 +54,7 @@ export default class Version {
             const value = summariseValues(valuesByArch)
             fields.push({id, label, value})
         }
+        this._fields = fields
         return fields
     }
 }

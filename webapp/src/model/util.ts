@@ -194,7 +194,7 @@ interface Object {
 }
 export function cachedProperty<This extends Object, Return>(
     target: (this: This) => Return,
-    context: ClassMethodDecoratorContext<This, (this: This) => Return>
+    context: ClassGetterDecoratorContext<This, (this: This) => Return>
 ) {
     const methodName = String(context.name);
 
@@ -215,4 +215,10 @@ export function cachedProperty<This extends Object, Return>(
 
 export function entries<T>(object: {[key: string]: T}): [string, T][] {
     return Object.keys(object).map(key => [key, object[key]]);
+}
+
+export function reversed<T>(iterable: Iterable<T>): Array<T> {
+    const result = Array.from(iterable)
+    result.reverse()
+    return result
 }

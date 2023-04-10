@@ -93,7 +93,7 @@ def inspect_image(image: str):
 
 
 def inspect_python(
-    call: Callable[[list[PathOrStr]], str],
+    call: Callable,
     python_path: ContainerPath,
     python_identifier: str,
 ):
@@ -102,12 +102,12 @@ def inspect_python(
     if not is_pypy:
         versions["python"] = re_extract(
             r"Python (\S+)",
-            call([python_path, "--version"]),
+            call([python_path, "--version"], capture_stderr=True),
         )
     else:
         versions["python"] = re_extract(
             r"PyPy (\S+)",
-            call([python_path, "--version"]),
+            call([python_path, "--version"], capture_stderr=True),
         )
 
     versions["setuptools"] = call(

@@ -44,7 +44,7 @@ export default class ImageReport {
     get globalTools(): [string, string][] {
         const pipxListOutput = this._getCommandOutput(['pipx', 'list', '--short'])
         if (!pipxListOutput) return []
-        const lines = pipxListOutput?.split('\n')
+        const lines = pipxListOutput?.trim().split('\n')
         return lines.map(l => {
             const [name, version] = l.split(' ', 2)
             return [name, version]
@@ -55,8 +55,21 @@ export default class ImageReport {
         const osRelease = this._getCommandOutput(['cat', '/etc/os-release'])
         if (osRelease) {
             // os release is key-value pairs in shell var format
-            const match = osRelease.match(/PRETTY_NAME="?(.*)"?/)
-            return match?.[1] ?? osRelease
+            const match = osRelease.match(/PRETTY_NAME=(.*)/)
+
+            if (!match) return osRelease
+
+            let prettyName = match[1]
+            // trim
+            prettyName = prettyName.trim()
+
+            if (prettyName.startsWith('"')) {
+                prettyName = prettyName.slice(1)
+                if (prettyName.endsWith('"')) {
+                    prettyName = prettyName.slice(0, prettyName.length - 1)
+                }
+            }
+            return prettyName
         }
         return this._getCommandOutput(['cat', '/etc/redhat-release'])?.trim() ?? null
     }
@@ -155,7 +168,7 @@ export class PythonEnvironment {
 
         const pipFreezeOutput = this._getPythonOutput(['-m', 'pip', 'freeze'])
         if (pipFreezeOutput) {
-            for (const line of pipFreezeOutput?.split('\n')) {
+            for (const line of pipFreezeOutput?.trim().split('\n')) {
                 const [packageName, version] = line.split('==')
                 result.push([packageName, version])
             }
