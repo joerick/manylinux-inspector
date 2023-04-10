@@ -21,6 +21,7 @@ def inspect_and_save(image: str, *, force: bool = False):
 
     inspect_data = inspect_image(image)
 
+    report_file.parent.mkdir(parents=True, exist_ok=True)
     report_file.write_text(json.dumps({
         "metadata": {
             "image": image,

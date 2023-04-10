@@ -100,6 +100,7 @@ def main():
 
     print("Writing latest images...", file=sys.stderr)
     latest_file = Path(__file__).parent / "data" / "latest.json"
+    latest_file.parent.mkdir(parents=True, exist_ok=True)
     latest_file.write_text(json.dumps({
         "metadata": {
             "generated_at": time.time(),
