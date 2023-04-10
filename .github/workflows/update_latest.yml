@@ -34,3 +34,6 @@ jobs:
           else
             echo "No changes"
           fi
+  rebuild-site:
+    needs: update-latest
+    uses: ./.github/workflows/webapp.yml

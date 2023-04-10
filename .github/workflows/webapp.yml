@@ -1,0 +1,46 @@
+name: webapp
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+
+    - name: Build
+      run: |
+        cd webapp
+        npm ci
+        npm run build
+
+    - name: Upload
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: webapp/dist
+
+  deploy:
+    needs: build
+    if: ${{ github.ref_name == 'main' }}
+
+    permissions:
+      pages: write  # to deploy to Pages
+      id-token: write  # to verify the deployment originates from an appropriate source
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
