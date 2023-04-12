@@ -79,6 +79,7 @@ interface FieldDescriptor {
   hasChildren: boolean
   isExpanded: boolean
   isVisible: boolean
+  level: number
 }
 const fieldsById = computed(() => {
   const result = new Map<string, FieldDescriptor>()
@@ -93,7 +94,8 @@ const fieldsById = computed(() => {
             hasParent: false,
             hasChildren: false,
             isExpanded: expandedFieldIds.has(field.id),
-            isVisible: true
+            isVisible: true,
+            level: 0,
           })
         }
       }
@@ -107,6 +109,8 @@ const fieldsById = computed(() => {
     fieldDescriptor.hasParent = true
 
     while (parent) {
+      fieldDescriptor.level += 1
+
       parent.hasChildren = true
       if (!parent.isExpanded) {
         fieldDescriptor.isVisible = false
@@ -189,7 +193,8 @@ function rowClicked(event: MouseEvent, field: FieldDescriptor) {
         <tr v-for="field in fields"
             :class="{parent: field.hasChildren,
                      expanded: field.isExpanded,
-                     hidden: !field.isVisible}"
+                     hidden: !field.isVisible,
+                     [`level-${field.level}`]: true}"
             @click="rowClicked($event, field)">
           <td>
             <span class="name" v-html="field.label"></span>
@@ -271,6 +276,7 @@ tr.hidden {
 }
 
 :global(body.is-safari .grid table tr.hidden) {
+  // Safari doesn't support visibility: collapse, so we hide the row
   display: none;
 }
 tr.parent {
@@ -322,6 +328,8 @@ tr:not(.parent) {
   td {
     padding: 5px 8px;
   }
+}
+tr.level-1 {
   td:first-child {
     padding-left: 36px;
   }

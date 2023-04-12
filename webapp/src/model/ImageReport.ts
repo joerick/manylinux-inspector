@@ -44,12 +44,14 @@ export default class ImageReport {
 
     get globalTools(): [string, string][] {
         const results = new Map<string, string>()
-        const pipxListOutput = this._getCommandOutput(['pipx', 'list', '--short'])
-        if (!pipxListOutput) return []
-        const lines = pipxListOutput.trim().split('\n')
-        for (const line of lines) {
-            const [name, version] = line.split(' ', 2)
-            results.set(name, version)
+
+        const pipxListOutput = this._getCommandOutput(['pipx', 'list', '--short'])?.trim()
+        if (pipxListOutput) {
+            const lines = pipxListOutput?.split('\n') ?? []
+            for (const line of lines) {
+                const [name, version] = line.split(' ', 2)
+                results.set(name, version)
+            }
         }
 
         const optionalSet = (key: string, value: string|null) => {
