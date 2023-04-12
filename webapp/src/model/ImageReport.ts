@@ -13,7 +13,8 @@ export interface ImageReportJSON {
 
 export interface LogEntry {
     command: string[]
-    output: string
+    stdout: string
+    stderr: string
     return_code: number
 }
 
@@ -42,13 +43,46 @@ export default class ImageReport {
     }
 
     get globalTools(): [string, string][] {
+        const results = new Map<string, string>()
         const pipxListOutput = this._getCommandOutput(['pipx', 'list', '--short'])
         if (!pipxListOutput) return []
-        const lines = pipxListOutput?.trim().split('\n')
-        return lines.map(l => {
-            const [name, version] = l.split(' ', 2)
-            return [name, version]
-        })
+        const lines = pipxListOutput.trim().split('\n')
+        for (const line of lines) {
+            const [name, version] = line.split(' ', 2)
+            results.set(name, version)
+        }
+
+        const optionalSet = (key: string, value: string|null) => {
+            if (value) {
+                results.set(key, value)
+            }
+        }
+        optionalSet(
+            "auditwheel",
+            regexExtract(this._getCommandOutput(['auditwheel', '--version']), /auditwheel (\S+)/)
+        )
+        optionalSet(
+            "patchelf",
+            regexExtract(this._getCommandOutput(['patchelf', '--version']), /patchelf (\S+)/)
+        )
+        optionalSet(
+            "git",
+            regexExtract(this._getCommandOutput(['git', '--version']), /git version (\S+)/)
+        )
+        optionalSet(
+            "curl",
+            regexExtract(this._getCommandOutput(['curl', '--version']), /curl (\S+)/)
+        )
+        optionalSet(
+            "openssl",
+            regexExtract(this._getCommandOutput(['openssl', 'version']), /OpenSSL (\S+)/)
+        )
+        optionalSet(
+            "pipx",
+            regexExtract(this._getCommandOutput(['pipx', '--version']), /(\S+)/)
+        )
+
+        return Array.from(results.entries())
     }
 
     get operatingSystemRelease(): string|null {
@@ -80,13 +114,37 @@ export default class ImageReport {
         return libcVersion?.split('\n')[0].trim() ?? null
     }
 
-    _getCommandOutput(command: string[]): string|null {
+    get operatingSystemPackageManager(): string|null {
+        const potentialPackageManagers = [
+            "yum",
+            "apt-get",
+            "apk",
+            "dnf",
+            "pacman",
+            "zypper",
+            "emerge",
+        ]
+        for (const packageManager of potentialPackageManagers) {
+            const packageManagerPath = this._getCommandOutput(['which', packageManager])
+            if (packageManagerPath) {
+                return packageManager
+            }
+        }
+        return null
+    }
+
+    _getCommandOutput(command: string[], part: 'stdout'|'stderr'|'all' = 'stdout'): string|null {
         for (const logEntry of this.reportJSON.data.log) {
             if (isEqual(logEntry.command, command)) {
                 if (logEntry.return_code != 0) {
                     return null
                 }
-                return logEntry.output
+
+                if (part == 'all') {
+                    return logEntry.stdout + logEntry.stderr
+                } else {
+                    return logEntry[part]
+                }
             }
         }
         return null
@@ -96,9 +154,12 @@ export default class ImageReport {
         return [
             {id: 'os', label: 'OS', value: this.operatingSystemRelease},
             {id: 'os.libc', label: 'libc', value: this.operatingSystemLibc},
+            {id: 'os.packageManager', label: 'Package manager', value: this.operatingSystemPackageManager},
             ...flatMap(this.pythonEnvironments, python => python.fields),
             {id: 'global-tools', label: 'Global Tools', value: ''},
-            ...this.globalTools.map(([name, version]) => ({id: `global-tools.${name}`, label: name, value: version})),
+            ...this.globalTools.map(([name, version]) => ({
+                id: `global-tools.${name}`, label: name, value: version
+            })),
         ]
     }
 }
@@ -193,4 +254,11 @@ export class PythonEnvironment {
     _getPythonOutput(command: string[]): string|null {
         return this.report._getCommandOutput([this.path, ...command])
     }
+}
+
+
+function regexExtract(text: string|null, regex: RegExp): string|null {
+    const match = text?.match(regex)
+    if (!match) return null
+    return match[1]
 }
