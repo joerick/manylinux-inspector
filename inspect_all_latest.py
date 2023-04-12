@@ -96,7 +96,11 @@ def main():
     for image in images_to_inspect:
         print(f" - {image}", file=sys.stderr)
 
-    executor.map(inspect_image_wrapper, images_to_inspect)
+    print("Inspecting images...", file=sys.stderr)
+    inspect_results = executor.map(inspect_image_wrapper, images_to_inspect)
+
+    # access the results to make sure they're all done
+    print("Inspection results:", list(inspect_results), file=sys.stderr)
 
     print("Writing latest images...", file=sys.stderr)
     latest_file = Path(__file__).parent / "data" / "latest.json"
