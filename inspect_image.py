@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import argparse
-from contextlib import redirect_stdout
+import dataclasses
 import json
-import re
 import subprocess
 import sys
+import uuid
+from contextlib import redirect_stdout
+from types import TracebackType
 from typing import Sequence, TypedDict
-from docker_container import DockerContainer
 
 
 class CommandLog(TypedDict):
@@ -24,7 +25,7 @@ def inspect_image(image: str):
 
     with DockerContainer(image=image) as container:
         def call(command: Sequence[str], allow_fail=False):
-            print(f'$ {command}')
+            print(f"$ {command}")
             call_result = container.call(command)
 
             commands_log.append(
@@ -41,7 +42,9 @@ def inspect_image(image: str):
                     call_result.returncode, command, call_result.stdout
                 )
 
-            print(f'$ {command}\n$?: {call_result.returncode}\nout: {call_result.stdout}\nerr: {call_result.stderr}\n')
+            print(
+                f"$ {command}\n$?: {call_result.returncode}\nout: {call_result.stdout}\nerr: {call_result.stderr}\n"
+            )
 
             return call_result
 
@@ -50,32 +53,42 @@ def inspect_image(image: str):
         call(["cat", "/etc/redhat-release"], allow_fail=True)
 
         # default environment
-        call(['env'])
+        call(["env"])
 
         # libc info
         call(["ldd", "--version"])
 
         # package manager
         possible_package_managers = [
-            "yum", "apt-get", "apk", "dnf", "pacman", "zypper", "emerge"
+            "yum",
+            "apt-get",
+            "apk",
+            "dnf",
+            "pacman",
+            "zypper",
+            "emerge",
         ]
         for package_manager in possible_package_managers:
             call(["which", package_manager], allow_fail=True)
 
         # global tools
-        call(['auditwheel', '--version'], allow_fail=True)
-        call(['patchelf', '--version'], allow_fail=True)
-        call(['git', '--version'], allow_fail=True)
-        call(['curl', '--version'], allow_fail=True)
-        call(['autoconf', '--version'], allow_fail=True)
-        call(['automake', '--version'], allow_fail=True)
-        call(['libtool', '--version'], allow_fail=True)
-        call(['sqlite3', '--version'], allow_fail=True)
-        call(['openssl', 'version'], allow_fail=True)
+        call(["auditwheel", "--version"], allow_fail=True)
+        call(["patchelf", "--version"], allow_fail=True)
+        call(["git", "--version"], allow_fail=True)
+        call(["curl", "--version"], allow_fail=True)
+        call(["autoconf", "--version"], allow_fail=True)
+        call(["automake", "--version"], allow_fail=True)
+        call(["libtool", "--version"], allow_fail=True)
+        call(["sqlite3", "--version"], allow_fail=True)
+        call(["openssl", "version"], allow_fail=True)
         call(["pipx", "--version"])
         call(["pipx", "list", "--short"])
 
-        pythons = container.call(['sh', '-c', 'echo /opt/python/*/bin/python']).stdout.strip().split(" ")
+        pythons = (
+            container.call(["sh", "-c", "echo /opt/python/*/bin/python"])
+            .stdout.strip()
+            .split(" ")
+        )
 
         for python_path in pythons:
             call([python_path, "--version"])
@@ -84,6 +97,90 @@ def inspect_image(image: str):
             call([python_path, "-m", "pip", "freeze"])
 
     return {"log": commands_log}
+
+
+class DockerContainer:
+    UTILITY_PYTHON = "/opt/python/cp38-cp38/bin/python"
+
+    def __init__(
+        self,
+        *,
+        image: str,
+        simulate_32_bit: bool = False,
+    ):
+        if not image:
+            msg = "Must have a non-empty image to run."
+            raise ValueError(msg)
+
+        self.image = image
+        self.simulate_32_bit = simulate_32_bit
+        self.name: str | None = None
+
+    def __enter__(self) -> DockerContainer:
+        self.name = f"manylinuxinspector-{uuid.uuid4()}"
+
+        subprocess.run(
+            [
+                "docker",
+                "run",
+                f"--name={self.name}",
+                "--detach",
+                "--tty",
+                self.image,
+            ],
+            check=True,
+            stdout=subprocess.DEVNULL,
+        )
+
+        noop_result = self.call(["/bin/true"])
+        assert noop_result.returncode == 0, noop_result.stderr
+
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        assert isinstance(self.name, str)
+
+        subprocess.run(
+            ["docker", "rm", "--force", "-v", self.name],
+            stdout=subprocess.DEVNULL,
+            check=False,
+        )
+        self.name = None
+
+    def call(self, args: Sequence[str]) -> CallResult:
+        assert isinstance(self.name, str)
+
+        if self.simulate_32_bit:
+            args = ["linux32", *args]
+
+        run_result = subprocess.run(
+            ["docker", "exec", self.name, *args],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            encoding="utf-8",
+            errors="surrogateescape",
+        )
+
+        return DockerContainer.CallResult(
+            returncode=run_result.returncode,
+            stdout=run_result.stdout,
+            stderr=run_result.stderr,
+        )
+
+    @dataclasses.dataclass
+    class CallResult:
+        returncode: int
+        stdout: str
+        stderr: str
+
+        def __bool__(self) -> bool:
+            return self.returncode == 0
 
 
 def main():
