@@ -56,7 +56,7 @@ def inspect_image(image: str):
         call(["env"])
 
         # libc info
-        call(["ldd", "--version"])
+        call(["ldd", "--version"], allow_fail=True)
 
         # package manager
         possible_package_managers = [

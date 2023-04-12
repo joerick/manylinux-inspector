@@ -111,7 +111,7 @@ export default class ImageReport {
     }
 
     get operatingSystemLibc(): string|null {
-        const libcVersion = this._getCommandOutput(["ldd", "--version"])
+        const libcVersion = this._getCommandOutput(["ldd", "--version"], 'all', true)
         // return the first line
         return libcVersion?.split('\n')[0].trim() ?? null
     }
@@ -135,10 +135,10 @@ export default class ImageReport {
         return null
     }
 
-    _getCommandOutput(command: string[], part: 'stdout'|'stderr'|'all' = 'stdout'): string|null {
+    _getCommandOutput(command: string[], part: 'stdout'|'stderr'|'all' = 'stdout', allowFail: boolean = false): string|null {
         for (const logEntry of this.reportJSON.data.log) {
             if (isEqual(logEntry.command, command)) {
-                if (logEntry.return_code != 0) {
+                if (logEntry.return_code != 0 && !allowFail) {
                     return null
                 }
 
