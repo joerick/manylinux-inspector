@@ -5,125 +5,85 @@ from __future__ import annotations
 import argparse
 from contextlib import redirect_stdout
 import json
-from pathlib import PurePosixPath
 import re
-import shlex
 import subprocess
 import sys
-from typing import Callable, Sequence, TypedDict
-from oci_container import OCIContainer, PathOrStr
-
-ContainerPath = PurePosixPath
+from typing import Sequence, TypedDict
+from docker_container import DockerContainer
 
 
 class CommandLog(TypedDict):
     command: list[str]
     return_code: int
-    output: str
-
-
-def re_extract(regex: str, input: str):
-    match = re.search(regex, input)
-    if not match:
-        return None
-    return match.group(1)
+    stderr: str
+    stdout: str
 
 
 def inspect_image(image: str):
-    report = {}
     commands_log: list[CommandLog] = []
 
-    with OCIContainer(image=image) as container:
-        def call(command: Sequence[PathOrStr], allow_fail=False, capture_stderr=True):
-            if capture_stderr:
-                actual_command = ["sh", "-c", f"{shlex.join(str(a) for a in command)} 2>&1"]
-            else:
-                actual_command = command
-
-            try:
-                output = container.call(actual_command, capture_output=True)
-                return_code = 0
-            except subprocess.CalledProcessError as e:
-                if not allow_fail:
-                    raise
-                output = e.output
-                return_code = e.returncode
+    with DockerContainer(image=image) as container:
+        def call(command: Sequence[str], allow_fail=False):
+            print(f'$ {command}')
+            call_result = container.call(command)
 
             commands_log.append(
                 {
-                    "command": list(str(arg) for arg in command),
-                    "return_code": return_code,
-                    "output": output,
+                    "command": list(command),
+                    "return_code": call_result.returncode,
+                    "stdout": call_result.stdout,
+                    "stderr": call_result.stderr,
                 }
             )
 
-            return output
+            if not allow_fail and call_result.returncode != 0:
+                raise subprocess.CalledProcessError(
+                    call_result.returncode, command, call_result.stdout
+                )
+
+            print(f'$ {command}\n$?: {call_result.returncode}\nout: {call_result.stdout}\nerr: {call_result.stderr}\n')
+
+            return call_result
 
         # os info
         call(["cat", "/etc/os-release"], allow_fail=True)
         call(["cat", "/etc/redhat-release"], allow_fail=True)
 
+        # default environment
+        call(['env'])
+
         # libc info
         call(["ldd", "--version"])
 
-        pipx_list_output = call(["pipx", "list", "--short"]).strip().splitlines()
-        for line in pipx_list_output:
-            name, _, version = line.partition(" ")
-            report[name] = version
+        # package manager
+        possible_package_managers = [
+            "yum", "apt-get", "apk", "dnf", "pacman", "zypper", "emerge"
+        ]
+        for package_manager in possible_package_managers:
+            call(["which", package_manager], allow_fail=True)
 
-        pythons = container.glob(ContainerPath("/opt/python/"), "*/bin/python")
+        # global tools
+        call(['auditwheel', '--version'], allow_fail=True)
+        call(['patchelf', '--version'], allow_fail=True)
+        call(['git', '--version'], allow_fail=True)
+        call(['curl', '--version'], allow_fail=True)
+        call(['autoconf', '--version'], allow_fail=True)
+        call(['automake', '--version'], allow_fail=True)
+        call(['libtool', '--version'], allow_fail=True)
+        call(['sqlite3', '--version'], allow_fail=True)
+        call(['openssl', 'version'], allow_fail=True)
+        call(["pipx", "--version"])
+        call(["pipx", "list", "--short"])
 
-        report["pipx"] = call(
-            ["pipx", "--version"],
-        ).strip()
+        pythons = container.call(['sh', '-c', 'echo /opt/python/*/bin/python']).stdout.strip().split(" ")
 
-        report["pythons"] = {}
         for python_path in pythons:
-            python_identifier = re_extract(
-                r"/opt/python/(.*)/bin/python", str(python_path)
-            )
-            assert python_identifier
-            report["pythons"][python_identifier] = inspect_python(
-                call, python_path, python_identifier
-            )
+            call([python_path, "--version"])
+            call([python_path, "-c", "import setuptools; print(setuptools.__version__)"])
+            call([python_path, "-m", "pip", "--version"])
+            call([python_path, "-m", "pip", "freeze"])
 
-    report["log"] = commands_log
-
-    return report
-
-
-def inspect_python(
-    call: Callable[[Sequence[PathOrStr]], str],
-    python_path: ContainerPath,
-    python_identifier: str,
-):
-    versions: dict[str, str | None] = {}
-    is_pypy = "pypy" in python_identifier
-    if not is_pypy:
-        versions["python"] = re_extract(
-            r"Python (\S+)",
-            call([python_path, "--version"]),
-        )
-    else:
-        versions["python"] = re_extract(
-            r"PyPy (\S+)",
-            call([python_path, "--version"]),
-        )
-
-    versions["setuptools"] = call(
-        [python_path, "-c", "import setuptools; print(setuptools.__version__)"],
-    ).strip()
-
-    pip_version_output = call([python_path, "-m", "pip", "--version"])
-    versions["pip"] = re_extract(r"pip (\S+)", pip_version_output)
-
-    pip_freeze_output = call([python_path, "-m", "pip", "freeze"]).strip().splitlines()
-
-    for line in pip_freeze_output:
-        name, _, version = line.partition("==")
-        versions[name] = version
-
-    return versions
+    return {"log": commands_log}
 
 
 def main():
