@@ -7,6 +7,7 @@ import Header from '@/components/Header.vue';
 import { fill, last, sortBy } from 'lodash';
 import FixedHorizontalStickyVertical from '@/components/FixedHorizontalStickyVertical.vue';
 import { regexExtract } from '@/model/util';
+import { useRoute, useRouter } from 'vue-router';
 
 
 const indexLoader = useAsyncState(
@@ -14,7 +15,17 @@ const indexLoader = useAsyncState(
   null,
 )
 
-const searchTerm = ref('latest')
+const router = useRouter()
+const route = useRoute()
+const searchTerm = computed({
+  get: () => {
+    const query = route.query as { q?: string }
+    return query.q ?? 'latest'
+  },
+  set: (value) => {
+    router.replace({ query: { q: value }})
+  }
+})
 
 const versionRefs = computed(() => {
   const index = indexLoader.state.value
