@@ -36,8 +36,8 @@ const versionRefs = computed(() => {
 
   // sort the refs
   const annotatedRefs = refs.map(ref => {
-    const imageType = regexExtract(ref.name, /([a-z]+)/i)
-    const imageRevision = regexExtract(ref.name, /[a-z]+(.*)/i)
+    const imageType = regexExtract(ref.name, /([a-z]+)/i) ?? ''
+    const imageRevision = regexExtract(ref.name, /[a-z]+(.*)/i) ?? ''
     let major, minor
     if (imageRevision == '1') {
       major = 0
@@ -67,8 +67,15 @@ const versionRefs = computed(() => {
       tag: ref.tag
     }
   })
-  const sortedAnnotatedRefs = sortBy(annotatedRefs, ['imageType', 'major', 'minor', 'tag'])
-  sortedAnnotatedRefs.reverse()
+
+  const sortedAnnotatedRefs = annotatedRefs.sort((a, b) => {
+    const imageTypeComparison = a.imageType.localeCompare(b.imageType);
+    if (imageTypeComparison !== 0) return imageTypeComparison;
+    if (b.major !== a.major) return b.major - a.major;
+    if (b.minor !== a.minor) return b.minor - a.minor;
+    return b.tag.localeCompare(a.tag);
+  });
+
   return sortedAnnotatedRefs.map(annotatedRef => annotatedRef.ref)
 })
 
