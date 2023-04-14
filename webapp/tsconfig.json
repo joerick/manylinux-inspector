@@ -5,7 +5,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    // workaround for https://github.com/vuejs/tsconfig/issues/6
+    "preserveValueImports": false,
+    "importsNotUsedAsValues": "remove",
+    "verbatimModuleSyntax": true,
   },
 
   "references": [
