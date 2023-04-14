@@ -6,6 +6,7 @@ import { computed, reactive, ref, toRaw, watch, watchEffect } from 'vue';
 import Header from '@/components/Header.vue';
 import { fill, last, sortBy } from 'lodash';
 import FixedHorizontalStickyVertical from '@/components/FixedHorizontalStickyVertical.vue';
+import { regexExtract } from '@/model/util';
 
 
 const indexLoader = useAsyncState(
@@ -20,7 +21,44 @@ const versionRefs = computed(() => {
   if (!index) {
     return []
   }
-  return index.search(searchTerm.value)
+  const refs = index.search(searchTerm.value)
+
+  // sort the refs
+  const annotatedRefs = refs.map(ref => {
+    const imageType = regexExtract(ref.name, /([a-z]+)/i)
+    const imageRevision = regexExtract(ref.name, /[a-z]+(.*)/i)
+    let major, minor
+    if (imageRevision == '1') {
+      major = 0
+      minor = 1
+    } else if (imageRevision == '2010') {
+      major = 0
+      minor = 2
+    } else if (imageRevision == '2014') {
+      major = 0
+      minor = 3
+    } else {
+      const match = imageRevision?.match(/(\d+)_(\d+)/)
+      if (!match) {
+        major = 0
+        minor = 0
+      } else {
+        major = parseInt(match[1])
+        minor = parseInt(match[2])
+      }
+    }
+
+    return {
+      ref,
+      imageType,
+      major,
+      minor,
+      tag: ref.tag
+    }
+  })
+  const sortedAnnotatedRefs = sortBy(annotatedRefs, ['imageType', 'major', 'minor', 'tag'])
+  sortedAnnotatedRefs.reverse()
+  return sortedAnnotatedRefs.map(annotatedRef => annotatedRef.ref)
 })
 
 interface VersionLoader {

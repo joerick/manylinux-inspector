@@ -222,3 +222,9 @@ export function reversed<T>(iterable: Iterable<T>): Array<T> {
     result.reverse()
     return result
 }
+
+export function regexExtract(text: string|null, regex: RegExp): string|null {
+    const match = text?.match(regex)
+    if (!match) return null
+    return match[1]
+}

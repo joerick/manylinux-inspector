@@ -1,5 +1,6 @@
 import {isEqual, flatMap} from 'lodash'
 import { version } from 'vue'
+import { regexExtract } from './util'
 
 export interface ImageReportJSON {
     metadata: {
@@ -23,6 +24,8 @@ export interface Field {
     label: string
     value: string|null
 }
+
+type OutputPart = 'stdout'|'stderr'|'all'
 
 export default class ImageReport {
     constructor (readonly reportJSON: ImageReportJSON) {
@@ -111,7 +114,7 @@ export default class ImageReport {
     }
 
     get operatingSystemLibc(): string|null {
-        const libcVersion = this._getCommandOutput(["ldd", "--version"], 'all', true)
+        const libcVersion = this._getCommandOutput(["ldd", "--version"], {part: 'all', allowFail: true})
         // return the first line
         return libcVersion?.split('\n')[0].trim() ?? null
     }
@@ -135,7 +138,9 @@ export default class ImageReport {
         return null
     }
 
-    _getCommandOutput(command: string[], part: 'stdout'|'stderr'|'all' = 'stdout', allowFail: boolean = false): string|null {
+    _getCommandOutput(command: string[], options: {part?: OutputPart, allowFail?: boolean} = {}): string|null {
+        const {part = 'stdout', allowFail = false} = options
+
         for (const logEntry of this.reportJSON.data.log) {
             if (isEqual(logEntry.command, command)) {
                 if (logEntry.return_code != 0 && !allowFail) {
@@ -209,7 +214,7 @@ export class PythonEnvironment {
     }
 
     get pythonVersion(): string|null {
-        const versionOutput = this._getPythonOutput(['--version'])
+        const versionOutput = this._getPythonOutput(['--version'], {part: 'all'})
         return versionOutput?.split(' ')?.[1] ?? null
     }
 
@@ -253,14 +258,7 @@ export class PythonEnvironment {
         ]
     }
 
-    _getPythonOutput(command: string[]): string|null {
-        return this.report._getCommandOutput([this.path, ...command])
+    _getPythonOutput(command: string[], options: Parameters<ImageReport["_getCommandOutput"]>[1] = {}): string|null {
+        return this.report._getCommandOutput([this.path, ...command], options)
     }
-}
-
-
-function regexExtract(text: string|null, regex: RegExp): string|null {
-    const match = text?.match(regex)
-    if (!match) return null
-    return match[1]
 }

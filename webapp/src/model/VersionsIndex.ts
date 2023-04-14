@@ -56,6 +56,10 @@ export class VersionsIndex {
             return this.latestVersionRefs
         }
 
+        if (queryLower == 'all') {
+            return this.allVersionRefs
+        }
+
         return this.indexJSON.versions_reports.filter(versionRef => {
             const versionId = `${versionRef.domain}/${versionRef.org}/${versionRef.name}:${versionRef.tag}`
             const versionIdLower = versionId.toLowerCase()
