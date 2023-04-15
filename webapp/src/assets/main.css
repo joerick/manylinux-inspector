@@ -4,7 +4,19 @@
 }
 
 .margins {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 10px;
+    padding: 0;
+}
+
+p {
+    margin-bottom: 10px;
 }

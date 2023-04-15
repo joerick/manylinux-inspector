@@ -8,6 +8,7 @@ import { fill, last, sortBy } from 'lodash';
 import FixedHorizontalStickyVertical from '@/components/FixedHorizontalStickyVertical.vue';
 import { regexExtract } from '@/model/util';
 import { useRoute, useRouter } from 'vue-router';
+import { compareStandardNames } from '@/model/standards';
 
 
 const indexLoader = useAsyncState(
@@ -33,50 +34,14 @@ const versionRefs = computed(() => {
     return []
   }
   const refs = index.search(searchTerm.value)
-
-  // sort the refs
-  const annotatedRefs = refs.map(ref => {
-    const imageType = regexExtract(ref.name, /([a-z]+)/i) ?? ''
-    const imageRevision = regexExtract(ref.name, /[a-z]+(.*)/i) ?? ''
-    let major, minor
-    if (imageRevision == '1') {
-      major = 0
-      minor = 1
-    } else if (imageRevision == '2010') {
-      major = 0
-      minor = 2
-    } else if (imageRevision == '2014') {
-      major = 0
-      minor = 3
-    } else {
-      const match = imageRevision?.match(/(\d+)_(\d+)/)
-      if (!match) {
-        major = 0
-        minor = 0
-      } else {
-        major = parseInt(match[1])
-        minor = parseInt(match[2])
-      }
+  refs.sort((a, b) => {
+    const compareNameResult = compareStandardNames(a.name, b.name)
+    if (compareNameResult !== 0) {
+      return compareNameResult
     }
-
-    return {
-      ref,
-      imageType,
-      major,
-      minor,
-      tag: ref.tag
-    }
+    return b.tag.localeCompare(a.tag)
   })
-
-  const sortedAnnotatedRefs = annotatedRefs.sort((a, b) => {
-    const imageTypeComparison = a.imageType.localeCompare(b.imageType);
-    if (imageTypeComparison !== 0) return imageTypeComparison;
-    if (b.major !== a.major) return b.major - a.major;
-    if (b.minor !== a.minor) return b.minor - a.minor;
-    return b.tag.localeCompare(a.tag);
-  });
-
-  return sortedAnnotatedRefs.map(annotatedRef => annotatedRef.ref)
+  return refs
 })
 
 interface VersionLoader {
@@ -265,6 +230,9 @@ function rowClicked(event: MouseEvent, field: FieldDescriptor) {
 </template>
 
 <style lang="scss" scoped>
+.grid {
+  font-size: 14px;
+}
 .search-bar {
   background-color: black;
   padding: 0 36px;

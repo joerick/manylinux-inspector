@@ -1,6 +1,6 @@
 import type { Field, ImageReportJSON } from "./ImageReport"
 import ImageReport from "./ImageReport"
-import { cachedProperty, summariseValues } from "./util"
+import { cachedProperty, compareArchs, summariseValues } from "./util"
 
 export default class Version {
     reports: {[arch: string]: ImageReport} = {}
@@ -27,6 +27,12 @@ export default class Version {
     get org(): string { return this.versionJSON.metadata.org }
     get name(): string { return this.versionJSON.metadata.name }
     get tag(): string { return this.versionJSON.metadata.tag }
+
+    get archs(): string[] {
+        const archs = Object.keys(this.reports)
+        archs.sort(compareArchs)
+        return archs
+    }
 
     _fields?: Field[]
     get fields(): Field[] {

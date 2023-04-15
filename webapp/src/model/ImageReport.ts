@@ -1,6 +1,6 @@
 import {isEqual, flatMap} from 'lodash'
 import { version } from 'vue'
-import { regexExtract } from './util'
+import { formatList, regexExtract } from './util'
 
 export interface ImageReportJSON {
     metadata: {
@@ -121,21 +121,18 @@ export default class ImageReport {
 
     get operatingSystemPackageManager(): string|null {
         const potentialPackageManagers = [
+            "dnf",
             "yum",
             "apt-get",
             "apk",
-            "dnf",
             "pacman",
             "zypper",
             "emerge",
         ]
-        for (const packageManager of potentialPackageManagers) {
-            const packageManagerPath = this._getCommandOutput(['which', packageManager])
-            if (packageManagerPath) {
-                return packageManager
-            }
-        }
-        return null
+        const installedPackageManagers = potentialPackageManagers.filter(name =>
+            !!this._getCommandOutput(['which', name])
+        )
+        return installedPackageManagers.join(', ') || null
     }
 
     _getCommandOutput(command: string[], options: {part?: OutputPart, allowFail?: boolean} = {}): string|null {
