@@ -1,6 +1,6 @@
 import type { Field, ImageReportJSON } from "./ImageReport"
 import ImageReport from "./ImageReport"
-import { cachedProperty, commitFromImageTag, compareArchs, dateFromImageTag, summariseValues } from "./util"
+import { commitFromImageTag, compareArchs, dateFromImageTag, summariseValues } from "./util"
 
 export default class Version {
     reports: {[arch: string]: ImageReport} = {}

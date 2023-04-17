@@ -109,7 +109,7 @@ const pythonsTable = computed(() => {
         </tbody>
       </table>
 
-      <h3>OS attributes</h3>
+      <h3>OS</h3>
       <dl>
         <template v-for="field in version.fields.filter(f => f.id.startsWith('os'))">
           <dt>{{ field.label }}</dt>

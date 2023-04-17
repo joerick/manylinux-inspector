@@ -20,7 +20,6 @@ const props = defineProps<{
             <div class="site-name">
               Manylinux Inspector
             </div>
-          <slot name="left" />
         </router-link>
         <div class="nav-items">
           <div class="mobile-expand-button">
