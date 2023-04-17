@@ -9,6 +9,7 @@ import FixedHorizontalStickyVertical from '@/components/FixedHorizontalStickyVer
 import { regexExtract } from '@/model/util';
 import { useRoute, useRouter } from 'vue-router';
 import { compareStandardNames } from '@/model/standards';
+import { sortFields } from '@/model/ImageReport';
 
 
 const indexLoader = useAsyncState(
@@ -144,24 +145,7 @@ const fieldsById = computed(() => {
 })
 
 const fields = computed(() => {
-  // sort the fields
-  const regex = /python\.(\w*?)(\d)(\d+)-(.*)/
-
-  const annotatedFields = Array.from(fieldsById.value.values()).map(field => {
-    const keypath = field.id
-  	const match = keypath.match(regex)
-    if (!match) return {field, keypath, priority: !field.id.startsWith('os')}
-    return {
-      field,
-      keypath,
-     	interpreter: match[1],
-      major: -parseInt(match[2]),
-      minor: -parseInt(match[3]),
-      rest: match[4],
-    }
-  })
-
-  return sortBy(annotatedFields, ['priority', 'interpreter', 'major', 'minor', 'rest', 'keypath']).map(item => item.field)
+  return sortFields(Array.from(fieldsById.value.values()))
 })
 
 function getParentId(fieldId: string): string | null {

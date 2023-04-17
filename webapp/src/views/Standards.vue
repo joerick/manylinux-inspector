@@ -46,14 +46,14 @@ function getStandardDescription(name: string) {
 
 <template>
   <div class="standards">
-    <Header page="versions" />
+    <Header page="standards" />
 
     <div class="spacer" style="height: 60px;"></div>
 
     <div class="margins">
       <div class="standard" v-for="standard in availableStandards">
         <h2>
-          <router-link :to="{ name: 'standard', params: { name: standard.name } }" >
+          <router-link :to="{ name: 'grid', query: { q: standard.name } }" >
             {{ standard.name }}
           </router-link>
         </h2>
@@ -65,7 +65,7 @@ function getStandardDescription(name: string) {
                        :is-latest="true" />
         </div>
         <div class="spacer" style="height: 10px"></div>
-        <RouterLink :to="{ name: 'standard', params: { name: standard.name } }" >
+        <RouterLink :to="{ name: 'grid', query: { q: standard.name } }" >
           {{ latestImages[standard.name] ? "Other versions >" : "Browse versions >" }}
         </RouterLink>
       </div>

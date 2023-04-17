@@ -17,6 +17,17 @@ h2 {
     padding: 0;
 }
 
+h3 {
+    margin-bottom: 8px;
+}
+
 p {
     margin-bottom: 10px;
+}
+
+a:link {
+    color: #007AFF;
+}
+a:visited {
+    color: #5530BF;
 }

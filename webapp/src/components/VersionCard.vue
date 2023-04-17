@@ -16,7 +16,9 @@ const date = computed(() => {
 
 <template>
   <div class="version-card">
-    <div class="tag">{{ version.tag }}</div>
+    <router-link :to="{ name: 'version', params: { name: version.name, tag: version.tag } }">
+      <div class="tag">{{ version.tag }}</div>
+    </router-link>
     <div class="date">{{ date }}</div>
     <div class="latest" v-if="isLatest">latest</div>
     <div class="spacer" style="height: 10px"></div>

@@ -236,6 +236,11 @@ export function dateFromImageTag(tag: string) {
     return new Date(year, month - 1, day)
 }
 
+export function commitFromImageTag(tag: string) {
+    // tag looks like 2023-04-09-db9a92f
+    return tag.split('-')[3]
+}
+
 export function timeAgo(date: Date): string {
   const now = new Date();
   const msPerDay = 24 * 60 * 60 * 1000;

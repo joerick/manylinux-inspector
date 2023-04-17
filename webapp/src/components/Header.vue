@@ -4,7 +4,7 @@ import { useElementBounding } from '@vueuse/core';
 import FixedHorizontal from './FixedHorizontal.vue';
 
 const props = defineProps<{
-  page?: 'versions' | 'grid',
+  page?: 'standards' | 'grid',
   belowHeight?: number,
 }>()
 
@@ -22,9 +22,9 @@ const props = defineProps<{
           <slot name="left" />
         </div>
         <div class="nav-items">
-          <div class="nav-item" :class="{active: page === 'versions'}">
+          <div class="nav-item" :class="{active: page === 'standards'}">
             <img src="@/assets/version-icon.svg" alt="Version icon" class="icon">
-            <span class="name">Versions</span>
+            <span class="name">Standards</span>
           </div>
           <div class="nav-item" :class="{active: page === 'grid'}">
             <img src="@/assets/grid-icon.svg" alt="grid icon" class="icon">
