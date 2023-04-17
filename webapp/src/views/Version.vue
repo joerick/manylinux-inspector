@@ -36,17 +36,20 @@ const selectedImage = ref<{arch: string, report: ImageReport} | null>(null)
 
 const pythonsTable = computed(() => {
   if (!version.value) return null
+  const pythonEnvironments = version.value.images[0].report.pythonEnvironments
+
   let pythonFields = version.value.fields.filter(f => f.id.startsWith('python.')) ?? []
   pythonFields = sortFields(pythonFields)
-  const pythonIds = new Set(pythonFields.map(f => f.id.split('.')[1]))
+  const pythonIds = pythonEnvironments.map(p => p.identifier)
   const subfieldIds = new Set(pythonFields.map(f => f.id.split('.').slice(2).join('.')))
-  const headers = ['Python version', ...subfieldIds]
+  const headers = ['Python', 'Path', ...subfieldIds]
   const rows = [] as string[][]
 
-  for (const pythonId of pythonIds) {
-    const row = [pythonId] as string[]
+  for (const pythonEnvironment of pythonEnvironments) {
+    const prettyName = pythonEnvironment.prettyName.name + (pythonEnvironment.prettyName.variant ?? '')
+    const row = [prettyName, `<code>${pythonEnvironment.path}</code>`] as string[]
     for (const subfieldId of subfieldIds) {
-      const field = pythonFields.find(f => f.id == `python.${pythonId}.${subfieldId}`)
+      const field = pythonFields.find(f => f.id == `python.${pythonEnvironment.identifier}.${subfieldId}`)
       row.push(field?.value ?? '')
     }
     rows.push(row)
@@ -131,7 +134,7 @@ const pythonsTable = computed(() => {
         </thead>
         <tbody>
           <tr v-for="row in pythonsTable?.rows">
-            <td v-for="value in row">{{ value }}</td>
+            <td v-for="value in row" v-html="value"></td>
           </tr>
         </tbody>
       </table>
@@ -179,7 +182,7 @@ const pythonsTable = computed(() => {
 h3 {
   margin-top: 20px;
 }
-code {
+:deep(code) {
   background-color: rgba(0, 0, 0, 0.05);
 }
 table {
@@ -192,6 +195,9 @@ table {
   padding: 0;
   border-collapse: collapse;
   margin-bottom: 10px;
+}
+.python-envs {
+  white-space: nowrap;
 }
 th, td {
   margin: 0;
@@ -229,7 +235,7 @@ dt {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  font-size: 0.9em;
+  font-size: 14px;
   font-weight: 500;
   &::before {
     content: "";
