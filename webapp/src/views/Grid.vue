@@ -190,7 +190,13 @@ function rowClicked(event: MouseEvent, field: FieldDescriptor) {
         <tr>
           <th></th>
           <th v-for="version in versionLoaders" :key="version.ref.filename">
-            {{ version.ref.name }}:<br>{{ version.ref.tag }}
+            <router-link :to="{
+              name: 'version',
+              params: {name: version.ref.name, tag: version.ref.tag}
+            }">
+              {{ version.ref.name }}:<br>
+              {{ version.ref.tag }}
+            </router-link>
           </th>
         </tr>
       </thead>
@@ -268,6 +274,10 @@ th {
 
   font-weight: 600;
   padding: 9px 8px;
+
+  a:link, a:visited {
+    color: inherit;
+  }
 }
 td:first-child, th:first-child {
   position: sticky;
