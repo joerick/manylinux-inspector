@@ -259,6 +259,7 @@ dt {
     font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
     font-weight: 400;
     font-size: 13px;
+    overflow-x: auto;
   }
   .command {
     font-weight: 600;

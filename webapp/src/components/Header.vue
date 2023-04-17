@@ -44,7 +44,7 @@ header {
 
 .main {
   background-color: #1f2933;
-  height: 60px;
+  min-height: 60px;
 
   display: flex;
   align-items: center;
