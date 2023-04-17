@@ -7,7 +7,7 @@ import NotFound from "./views/NotFound.vue";
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [
-        { path: '/', component: Standards },
+        { path: '/', name: 'standards', component: Standards },
         { path: '/grid', name: 'grid', component: Grid },
         { path: '/:name/:tag', name: 'version', component: Version },
         // 404

@@ -2,6 +2,7 @@
 import { computed, reactive, ref, type StyleValue } from 'vue';
 import { useElementBounding } from '@vueuse/core';
 import FixedHorizontal from './FixedHorizontal.vue';
+import type { standards } from '@/model/standards';
 
 const props = defineProps<{
   page?: 'standards' | 'grid',
@@ -14,22 +15,27 @@ const props = defineProps<{
   <header>
     <fixed-horizontal :height="60">
       <div class="main">
-        <div class="left">
-          <img class="logo" src="@/assets/icon.svg" alt="Icon" />
-          <div class="site-name">
-            Manylinux Inspector
-          </div>
+        <router-link :to="{name: 'standards'}" class="left">
+            <img class="logo" src="@/assets/icon.svg" alt="Icon" />
+            <div class="site-name">
+              Manylinux Inspector
+            </div>
           <slot name="left" />
-        </div>
+        </router-link>
         <div class="nav-items">
-          <div class="nav-item" :class="{active: page === 'standards'}">
+          <div class="mobile-expand-button">
+            <div class="l"></div>
+            <div class="l"></div>
+            <div class="l"></div>
+          </div>
+          <router-link :to="{name: 'standards'}" class="nav-item" :class="{active: page === 'standards'}">
             <img src="@/assets/version-icon.svg" alt="Version icon" class="icon">
             <span class="name">Standards</span>
-          </div>
-          <div class="nav-item" :class="{active: page === 'grid'}">
+          </router-link>
+          <router-link :to="{name: 'grid'}" class="nav-item" :class="{active: page === 'grid'}">
             <img src="@/assets/grid-icon.svg" alt="grid icon" class="icon">
             <span class="name">Grid</span>
-          </div>
+          </router-link>
         </div>
       </div>
     </fixed-horizontal>
@@ -40,6 +46,13 @@ const props = defineProps<{
 header {
   color: white;
   font-size: 16px;
+
+  a {
+    text-decoration: none;
+    &:link, &:visited {
+      color: inherit;
+    }
+  }
 }
 
 .main {
@@ -48,7 +61,6 @@ header {
 
   display: flex;
   align-items: center;
-  height: 60px;
   gap: 14px;
   padding: 0 36px;
 }
@@ -69,21 +81,26 @@ header {
 }
 .left {
   gap: 14px;
+  height: 60px;
 }
 .nav-items {
   justify-content: flex-end;
   flex: 1;
 }
 .nav-item {
-  height: 100%;
+  line-height: 60px;
 
   display: flex;
   align-items: center;
   gap: 7px;
   padding: 0 20px;
+
   &.active {
     background-color: black;
   }
+}
+.mobile-expand-button {
+
 }
 
 </style>
