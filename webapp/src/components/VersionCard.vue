@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type Version from '@/model/Version';
+import type { VersionRef } from '@/model/VersionsIndex';
 import { dateFromImageTag, timeAgo } from '@/model/util';
 import { computed } from 'vue';
 
 const props = defineProps<{
-  version: Version,
+  version: Version|VersionRef,
   isLatest?: boolean,
 }>()
 const date = computed(() => {

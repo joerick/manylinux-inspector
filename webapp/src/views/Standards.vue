@@ -28,15 +28,12 @@ const availableStandards = computed(() => {
   return result
 })
 
-const latestImagesLoader = useAsyncState(async () => {
-  const index = await VersionsIndex.get();
+const latestVersions = computed(() => {
+  const index = indexLoader.state.value;
+  if (!index) return {}
 
-  const latestVersions = await Promise.all(
-    index.latestVersionRefs.map(ref => Version.getWithFilename(ref.filename))
-  )
-  return groupBy(latestVersions, version => version.name)
+  return groupBy(index.latestVersionRefs, ref => ref.name)
 }, {})
-const latestImages = latestImagesLoader.state
 
 function getStandardDescription(name: string) {
   return standards.find(s => s.name == name)?.description ?? null
@@ -53,20 +50,20 @@ function getStandardDescription(name: string) {
     <div class="margins">
       <div class="standard" v-for="standard in availableStandards">
         <h2>
-          <router-link :to="{ name: 'grid', query: { q: standard.name } }" >
+          <router-link :to="{ name: 'standard', params: { name: standard.name } }" >
             {{ standard.name }}
           </router-link>
         </h2>
         <p>{{ standard.description }}</p>
         <div class="spacer" style="height: 5px"></div>
         <div class="cards">
-          <VersionCard v-for="version in latestImages[standard.name]"
+          <VersionCard v-for="version in latestVersions[standard.name]"
                        :version="version"
                        :is-latest="true" />
         </div>
         <div class="spacer" style="height: 10px"></div>
-        <RouterLink :to="{ name: 'grid', query: { q: standard.name } }" >
-          {{ latestImages[standard.name] ? "Other versions >" : "Browse versions >" }}
+        <RouterLink :to="{ name: 'standard', params: { name: standard.name } }" >
+          {{ latestVersions[standard.name] ? "Other versions >" : "Browse versions >" }}
         </RouterLink>
       </div>
     </div>

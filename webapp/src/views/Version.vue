@@ -164,11 +164,7 @@ const pythonsTable = computed(() => {
         </div>
       </div>
 
-      <h3>
-        The {{ standard?.name }} standard
-      </h3>
-      <p>{{ standard?.description }}</p>
-      <div class="spacer" style="height: 5px"></div>
+      <div class="spacer" style="height: 30px"></div>
     </div>
   </div>
 </template>

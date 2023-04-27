@@ -5,6 +5,7 @@ export interface VersionRef {
     org: string
     name: string
     tag: string
+    archs: string[]
     filename: string
 }
 

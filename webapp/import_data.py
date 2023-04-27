@@ -70,6 +70,7 @@ def generate_versions_reports():
             "org": org,
             "name": name,
             "tag": tag,
+            "archs": list(reports.keys()),
             "filename": combined_report_file.name,
         })
 
