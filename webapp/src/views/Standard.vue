@@ -70,6 +70,8 @@ const versions = standardVersionsLoader.state
         View in grid >
       </RouterLink>
     </div>
+
+    <div class="spacer" style="height: 60px;"></div>
   </div>
 </template>
 

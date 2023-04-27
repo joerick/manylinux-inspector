@@ -9,6 +9,7 @@ import { computed, ref, type StyleValue } from 'vue';
 
 const props = defineProps<{
   height: number;
+  zIndex?: number;
 }>()
 
 const placeholderElement = ref<HTMLElement>()
@@ -17,6 +18,7 @@ const placeholderRect = useElementBounding(placeholderElement)
 const contentStyle = computed<StyleValue>(() => ({
   top: `${placeholderRect.y.value}px`,
   height: `${props.height}px`,
+  zIndex: props.zIndex,
 }))
 
 const placeholderStyle = computed<StyleValue>(() => ({

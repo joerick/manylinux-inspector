@@ -67,6 +67,8 @@ function getStandardDescription(name: string) {
         </RouterLink>
       </div>
     </div>
+
+    <div class="spacer" style="height: 60px;"></div>
   </div>
 </template>
 

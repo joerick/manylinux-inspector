@@ -9,11 +9,13 @@ const props = defineProps<{
   belowHeight?: number,
 }>()
 
+const menuOpen = ref(false)
+
 </script>
 
 <template>
   <header>
-    <fixed-horizontal :height="60">
+    <fixed-horizontal :height="60" :z-index="20">
       <div class="main">
         <router-link :to="{name: 'standards'}" class="left">
             <img class="logo" src="@/assets/icon.svg" alt="Icon" />
@@ -21,12 +23,12 @@ const props = defineProps<{
               Manylinux Inspector
             </div>
         </router-link>
-        <div class="nav-items">
-          <div class="mobile-expand-button">
-            <div class="l"></div>
-            <div class="l"></div>
-            <div class="l"></div>
-          </div>
+        <div class="mobile-expand-button" @click="menuOpen = !menuOpen">
+          <div class="l"></div>
+          <div class="l"></div>
+          <div class="l"></div>
+        </div>
+        <div class="nav-items" :class="{'menu-open': menuOpen}">
           <router-link :to="{name: 'standards'}" class="nav-item" :class="{active: page === 'standards'}">
             <img src="@/assets/version-icon.svg" alt="Version icon" class="icon">
             <span class="name">Standards</span>
@@ -59,9 +61,14 @@ header {
   min-height: 60px;
 
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 0 14px;
   padding: 0 36px;
+
+  @media (max-width: 599px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .logo {
@@ -85,21 +92,52 @@ header {
 .nav-items {
   justify-content: flex-end;
   flex: 1;
-}
-.nav-item {
-  line-height: 60px;
+  .nav-item {
+    line-height: 60px;
 
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 20px;
 
-  &.active {
-    background-color: black;
+    &.active {
+      background-color: black;
+    }
+  }
+
+  @media (max-width: 599px) {
+    flex-direction: column;
+    align-items: flex-end;
+    &:not(.menu-open) {
+      .nav-item {
+        display: none;
+      }
+    }
   }
 }
 .mobile-expand-button {
+  position: absolute;
+  top: 0;
+  right: 36px;
+  height: 60px;
+  width: 60px;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  gap: 4px 0;
+
+  @media (min-width: 600px) {
+    display: none;
+  }
+  .l {
+    width: 20px;
+    height: 2px;
+    background-color: white;
+  }
 }
-
 </style>
