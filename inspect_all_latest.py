@@ -102,15 +102,23 @@ def main():
     # access the results to make sure they're all done
     print("Inspection results:", list(inspect_results), file=sys.stderr)
 
-    print("Writing latest images...", file=sys.stderr)
     latest_file = Path(__file__).parent / "data" / "latest.json"
-    latest_file.parent.mkdir(parents=True, exist_ok=True)
-    latest_file.write_text(json.dumps({
-        "metadata": {
-            "generated_at": time.time(),
-        },
-        "data": latest_images,
-    }, indent=2))
+    prev_latest_images = {}
+
+    if latest_file.exists():
+        prev_latest_images = json.loads(latest_file.read_text())["data"]
+
+    if prev_latest_images == latest_images:
+        print("No changes to latest images, not writing.", file=sys.stderr)
+    else:
+        print("Writing latest images...", file=sys.stderr)
+        latest_file.parent.mkdir(parents=True, exist_ok=True)
+        latest_file.write_text(json.dumps({
+            "metadata": {
+                "last_updated": time.time(),
+            },
+            "data": latest_images,
+        }, indent=2))
 
     print(f"Finished.", file=sys.stderr)
 
