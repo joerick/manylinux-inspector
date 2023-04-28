@@ -182,7 +182,7 @@ function rowClicked(event: MouseEvent, field: FieldDescriptor) {
     <fixed-horizontal-sticky-vertical :height="35" :z-index="10" :sticky-top="0">
       <div class="search-bar">
         <img class="icon" src="@/assets/search-menu-icon.svg" alt="search-menu" role="button" />
-        <input type="text" placeholder="all" v-model="searchTerm" />
+        <input type="text" placeholder="all" v-model="searchTerm" spellcheck="false" />
       </div>
     </fixed-horizontal-sticky-vertical>
     <table cellspacing="0">

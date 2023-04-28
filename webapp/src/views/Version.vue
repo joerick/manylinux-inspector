@@ -76,6 +76,12 @@ const pythonsTable = computed(() => {
       <h3>Metadata</h3>
 
       <dl>
+        <dt>Standard</dt>
+        <dd>
+          <router-link :to="{name: 'standard', params: {name: standardName}}">
+            {{ standardName }}
+          </router-link>
+        </dd>
         <dt>Created</dt>
         <dd>
           {{ version.date.toLocaleDateString(undefined, {dateStyle: 'full'}) }}
