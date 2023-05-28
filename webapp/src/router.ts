@@ -8,8 +8,8 @@ import NotFound from "./views/NotFound.vue";
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [
-        { path: '/', name: 'standards', component: Standards },
-        { path: '/grid', name: 'grid', component: Grid },
+        { path: '/', name: 'grid', component: Grid },
+        { path: '/standards', name: 'standards', component: Standards },
         { path: '/:name', name: 'standard', component: Standard},
         { path: '/:name/:tag', name: 'version', component: Version },
         // 404

@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, type StyleValue } from 'vue';
-import { useElementBounding } from '@vueuse/core';
+import { ref } from 'vue';
 import FixedHorizontal from './FixedHorizontal.vue';
-import type { standards } from '@/model/standards';
 
 const props = defineProps<{
   page?: 'standards' | 'grid',
@@ -17,7 +15,7 @@ const menuOpen = ref(false)
   <header>
     <fixed-horizontal :height="60" :z-index="20">
       <div class="main">
-        <router-link :to="{name: 'standards'}" class="left">
+        <router-link :to="{name: 'grid'}" class="left">
             <img class="logo" src="@/assets/icon.svg" alt="Icon" />
             <div class="site-name">
               Manylinux Inspector
