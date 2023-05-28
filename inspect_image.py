@@ -48,6 +48,12 @@ def inspect_image(image: str):
 
             return call_result
 
+        def glob(pattern: str) -> list[str]:
+            call_result = call(["sh", "-c", f"ls -d {pattern}"], allow_fail=True)
+            if call_result.returncode != 0:
+                return []
+            return call_result.stdout.strip().split("\n")
+
         # os info
         call(["cat", "/etc/os-release"], allow_fail=True)
         call(["cat", "/etc/redhat-release"], allow_fail=True)
@@ -57,6 +63,9 @@ def inspect_image(image: str):
 
         # libc info
         call(["ldd", "--version"], allow_fail=True)
+        for musl_libc in glob("/lib/libc.musl-*"):
+            # musl libc can be opened as a program, it prints its version
+            call([musl_libc], allow_fail=True)
 
         # package manager
         possible_package_managers = [
@@ -84,11 +93,7 @@ def inspect_image(image: str):
         call(["pipx", "--version"])
         call(["pipx", "list", "--short"])
 
-        pythons = (
-            container.call(["sh", "-c", "echo /opt/python/*/bin/python"])
-            .stdout.strip()
-            .split(" ")
-        )
+        pythons = glob('/opt/python/*/bin/python')
 
         for python_path in pythons:
             call([python_path, "--version"])
