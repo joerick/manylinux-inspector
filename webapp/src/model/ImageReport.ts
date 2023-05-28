@@ -1,6 +1,5 @@
-import { isEqual, flatMap, sortBy } from 'lodash'
-import { version } from 'vue'
-import { dateFromImageTag, formatList, regexExtract } from './util'
+import { isEqual, flatMap, sortBy } from 'lodash-es'
+import { regexExtract } from './util'
 
 export interface ImageReportJSON {
     metadata: {
@@ -180,7 +179,7 @@ export class PythonEnvironment {
         return pathParts[3]
     }
 
-    get prettyName(): { name: string, variant?: string } {
+    get identifierInfo() {
         const identifier = this.identifier
         let match = identifier.match(/^([cp]p)(\d)(\d+).*/)
         if (!match) {
@@ -189,8 +188,8 @@ export class PythonEnvironment {
         }
 
         const interpreterId = match[1]
-        const major = match[2]
-        const minor = match[3]
+        const major = parseInt(match[2])
+        const minor = parseInt(match[3])
 
         let interpreter
         if (interpreterId == 'cp') {
@@ -204,10 +203,15 @@ export class PythonEnvironment {
 
         let variant
 
-        if (major == '2' && minor == '7') {
+        if (major == 2 && minor == 7) {
             // get the letters at the end of the id
             variant = this.identifier.match(/[a-z]+$/)![0]
         }
+        return { interpreterId, interpreter, major, minor, variant }
+    }
+
+    get prettyName(): { name: string, variant?: string } {
+        const { interpreter, major, minor, variant } = this.identifierInfo
 
         return { name: `${interpreter} ${major}.${minor}`, variant }
     }

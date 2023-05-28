@@ -4,13 +4,12 @@ import { VersionsIndex } from '@/model/VersionsIndex';
 import { standards } from '@/model/standards';
 import { useAsyncState } from '@vueuse/core';
 import { computed, ref } from 'vue';
-import VersionCard from '@/components/VersionCard.vue';
 import { useRoute } from 'vue-router';
-import NotFound from './NotFound.vue';
 import Version from '@/model/Version';
 import type ImageReport from '@/model/ImageReport';
-import { dateFromImageTag, timeAgo } from '@/model/util';
+import { timeAgo } from '@/model/util';
 import { sortFields } from '@/model/ImageReport';
+import { orderBy } from 'lodash-es';
 
 const route = useRoute()
 const standardName = computed(() => route.params.name as string)
@@ -36,18 +35,24 @@ const selectedImage = ref<{arch: string, report: ImageReport} | null>(null)
 
 const pythonsTable = computed(() => {
   if (!version.value) return null
-  const pythonEnvironments = version.value.images[0].report.pythonEnvironments
+  let pythonEnvironments = version.value.images[0].report.pythonEnvironments
+
+  pythonEnvironments = orderBy(
+    pythonEnvironments,
+    ['identifierInfo.interpreter', 'identifierInfo.major', 'identifierInfo.minor', 'identifierInfo.variant'],
+    ['asc', 'desc', 'desc', 'asc']
+  )
 
   let pythonFields = version.value.fields.filter(f => f.id.startsWith('python.')) ?? []
   pythonFields = sortFields(pythonFields)
   const pythonIds = pythonEnvironments.map(p => p.identifier)
   const subfieldIds = new Set(pythonFields.map(f => f.id.split('.').slice(2).join('.')))
-  const headers = ['Python', 'Path', ...subfieldIds]
+  const headers = ['Python', 'Version', 'Path', ...subfieldIds]
   const rows = [] as string[][]
 
   for (const pythonEnvironment of pythonEnvironments) {
     const prettyName = pythonEnvironment.prettyName.name + (pythonEnvironment.prettyName.variant ?? '')
-    const row = [prettyName, `<code>${pythonEnvironment.path}</code>`] as string[]
+    const row = [prettyName, pythonEnvironment.pythonVersion, `<code>${pythonEnvironment.path}</code>`] as string[]
     for (const subfieldId of subfieldIds) {
       const field = pythonFields.find(f => f.id == `python.${pythonEnvironment.identifier}.${subfieldId}`)
       row.push(field?.value ?? '')

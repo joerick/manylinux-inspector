@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue';
-import Version from '@/model/Version';
 import { VersionsIndex } from '@/model/VersionsIndex';
 import { compareStandardNames, standards } from '@/model/standards';
 import { useAsyncState } from '@vueuse/core';
 import { computed } from 'vue';
 import VersionCard from '@/components/VersionCard.vue';
-import { groupBy, union, uniqBy } from 'lodash';
-import { unique } from '@/model/util';
+import { groupBy, uniqBy } from 'lodash-es';
 
 const indexLoader = useAsyncState(
   VersionsIndex.get(),

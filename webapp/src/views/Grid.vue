@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import Version from '@/model/Version';
 import { VersionsIndex, type VersionRef } from '@/model/VersionsIndex';
-import { computedAsync, useAsyncState } from '@vueuse/core';
-import { computed, reactive, ref, toRaw, watch, watchEffect } from 'vue';
+import { useAsyncState } from '@vueuse/core';
+import { computed, reactive, ref, toRaw, watch } from 'vue';
 import Header from '@/components/Header.vue';
-import { fill, last, sortBy } from 'lodash';
 import FixedHorizontalStickyVertical from '@/components/FixedHorizontalStickyVertical.vue';
-import { regexExtract } from '@/model/util';
 import { useRoute, useRouter } from 'vue-router';
 import { compareStandardNames } from '@/model/standards';
 import { sortFields } from '@/model/ImageReport';
