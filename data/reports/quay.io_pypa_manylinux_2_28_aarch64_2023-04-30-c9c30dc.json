@@ -1,7 +1,7 @@
 {
   "metadata": {
     "image": "quay.io/pypa/manylinux_2_28_aarch64:2023-04-30-c9c30dc",
-    "generated_at": 1682916365.0122504
+    "generated_at": 1685363737.153088
   },
   "data": {
     "log": [
@@ -28,7 +28,7 @@
           "env"
         ],
         "return_code": 0,
-        "stdout": "HOME=/root\nSSL_CERT_FILE=/opt/_internal/certs.pem\nPKG_CONFIG_PATH=/usr/local/lib/pkgconfig\nLD_LIBRARY_PATH=/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib:/opt/rh/gcc-toolset-12/root/usr/lib64/dyninst:/opt/rh/gcc-toolset-12/root/usr/lib/dyninst\nDEVTOOLSET_ROOTPATH=/opt/rh/gcc-toolset-12/root\nLANGUAGE=en_US.UTF-8\nLANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8\nAUDITWHEEL_PLAT=manylinux_2_28_aarch64\nAUDITWHEEL_ARCH=aarch64\nAUDITWHEEL_POLICY=manylinux_2_28\nHOSTNAME=49182ec01eab\nPATH=/opt/rh/gcc-toolset-12/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n",
+        "stdout": "PATH=/opt/rh/gcc-toolset-12/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nHOSTNAME=dc470d570b17\nAUDITWHEEL_POLICY=manylinux_2_28\nAUDITWHEEL_ARCH=aarch64\nAUDITWHEEL_PLAT=manylinux_2_28_aarch64\nLC_ALL=en_US.UTF-8\nLANG=en_US.UTF-8\nLANGUAGE=en_US.UTF-8\nDEVTOOLSET_ROOTPATH=/opt/rh/gcc-toolset-12/root\nLD_LIBRARY_PATH=/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib:/opt/rh/gcc-toolset-12/root/usr/lib64/dyninst:/opt/rh/gcc-toolset-12/root/usr/lib/dyninst\nPKG_CONFIG_PATH=/usr/local/lib/pkgconfig\nSSL_CERT_FILE=/opt/_internal/certs.pem\nHOME=/root\n",
         "stderr": ""
       },
       {
@@ -39,6 +39,16 @@
         "return_code": 0,
         "stdout": "ldd (GNU libc) 2.28\nCopyright (C) 2018 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\nWritten by Roland McGrath and Ulrich Drepper.\n",
         "stderr": ""
+      },
+      {
+        "command": [
+          "sh",
+          "-c",
+          "ls -d /lib/libc.musl-*"
+        ],
+        "return_code": 2,
+        "stdout": "",
+        "stderr": "ls: cannot access '/lib/libc.musl-*': No such file or directory\n"
       },
       {
         "command": [
@@ -205,6 +215,16 @@
       },
       {
         "command": [
+          "sh",
+          "-c",
+          "ls -d /opt/python/*/bin/python"
+        ],
+        "return_code": 0,
+        "stdout": "/opt/python/cp310-cp310/bin/python\n/opt/python/cp311-cp311/bin/python\n/opt/python/cp36-cp36m/bin/python\n/opt/python/cp37-cp37m/bin/python\n/opt/python/cp38-cp38/bin/python\n/opt/python/cp39-cp39/bin/python\n/opt/python/pp37-pypy37_pp73/bin/python\n/opt/python/pp38-pypy38_pp73/bin/python\n/opt/python/pp39-pypy39_pp73/bin/python\n",
+        "stderr": ""
+      },
+      {
+        "command": [
           "/opt/python/cp310-cp310/bin/python",
           "--version"
         ],
@@ -215,33 +235,13 @@
       {
         "command": [
           "/opt/python/cp310-cp310/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp310-cp310/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/cp310-cp310/lib/python3.10/site-packages/pip (python 3.10)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp310-cp310/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\npackaging==23.1\npyproject_hooks==1.0.0\ntomli==2.0.1\n",
+        "stdout": "build==0.10.0\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nsetuptools==67.7.2\ntomli==2.0.1\nwheel==0.40.0\n",
         "stderr": ""
       },
       {
@@ -256,33 +256,13 @@
       {
         "command": [
           "/opt/python/cp311-cp311/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp311-cp311/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/cp311-cp311/lib/python3.11/site-packages/pip (python 3.11)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp311-cp311/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\npackaging==23.1\npyproject_hooks==1.0.0\n",
+        "stdout": "build==0.10.0\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nsetuptools==67.7.2\nwheel==0.40.0\n",
         "stderr": ""
       },
       {
@@ -297,33 +277,13 @@
       {
         "command": [
           "/opt/python/cp36-cp36m/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "59.6.0\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp36-cp36m/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 21.3.1 from /opt/python/cp36-cp36m/lib/python3.6/site-packages/pip (python 3.6)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp36-cp36m/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.9.0\nimportlib-metadata==4.8.3\npackaging==21.3\npep517==0.13.0\npyparsing==3.0.9\ntomli==1.2.3\ntyping_extensions==4.1.1\nzipp==3.6.0\n",
+        "stdout": "build==0.9.0\nimportlib-metadata==4.8.3\npackaging==21.3\npep517==0.13.0\npip==21.3.1\npyparsing==3.0.9\nsetuptools==59.6.0\ntomli==1.2.3\ntyping_extensions==4.1.1\nwheel==0.37.1\nzipp==3.6.0\n",
         "stderr": ""
       },
       {
@@ -338,33 +298,13 @@
       {
         "command": [
           "/opt/python/cp37-cp37m/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp37-cp37m/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/cp37-cp37m/lib/python3.7/site-packages/pip (python 3.7)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp37-cp37m/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\nimportlib-metadata==6.6.0\npackaging==23.1\npyproject_hooks==1.0.0\ntomli==2.0.1\ntyping_extensions==4.5.0\nzipp==3.15.0\n",
+        "stdout": "build==0.10.0\nimportlib-metadata==6.6.0\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nsetuptools==67.7.2\ntomli==2.0.1\ntyping_extensions==4.5.0\nwheel==0.40.0\nzipp==3.15.0\n",
         "stderr": ""
       },
       {
@@ -379,33 +319,13 @@
       {
         "command": [
           "/opt/python/cp38-cp38/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp38-cp38/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/cp38-cp38/lib/python3.8/site-packages/pip (python 3.8)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp38-cp38/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\npackaging==23.1\npyproject_hooks==1.0.0\ntomli==2.0.1\n",
+        "stdout": "build==0.10.0\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nsetuptools==67.7.2\ntomli==2.0.1\nwheel==0.40.0\n",
         "stderr": ""
       },
       {
@@ -420,33 +340,13 @@
       {
         "command": [
           "/opt/python/cp39-cp39/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp39-cp39/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/cp39-cp39/lib/python3.9/site-packages/pip (python 3.9)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/cp39-cp39/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\npackaging==23.1\npyproject_hooks==1.0.0\ntomli==2.0.1\n",
+        "stdout": "build==0.10.0\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nsetuptools==67.7.2\ntomli==2.0.1\nwheel==0.40.0\n",
         "stderr": ""
       },
       {
@@ -461,33 +361,13 @@
       {
         "command": [
           "/opt/python/pp37-pypy37_pp73/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/pp37-pypy37_pp73/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/pp37-pypy37_pp73/site-packages/pip (python 3.7)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/pp37-pypy37_pp73/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\ncffi==1.15.0\ngreenlet==0.4.13\nhpy==0.0.3\nimportlib-metadata==6.6.0\npackaging==23.1\npyproject_hooks==1.0.0\nreadline==6.2.4.1\ntomli==2.0.1\ntyping_extensions==4.5.0\nzipp==3.15.0\n",
+        "stdout": "build==0.10.0\ncffi==1.15.0\ngreenlet==0.4.13\nhpy==0.0.3\nimportlib-metadata==6.6.0\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nreadline==6.2.4.1\nsetuptools==67.7.2\ntomli==2.0.1\ntyping_extensions==4.5.0\nwheel==0.40.0\nzipp==3.15.0\n",
         "stderr": ""
       },
       {
@@ -502,33 +382,13 @@
       {
         "command": [
           "/opt/python/pp38-pypy38_pp73/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/pp38-pypy38_pp73/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/pp38-pypy38_pp73/lib/pypy3.8/site-packages/pip (python 3.8)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/pp38-pypy38_pp73/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\ncffi==1.15.1\ngreenlet==0.4.13\nhpy==0.0.4.dev179+g9b5d200\npackaging==23.1\npyproject_hooks==1.0.0\nreadline==6.2.4.1\ntomli==2.0.1\n",
+        "stdout": "build==0.10.0\ncffi==1.15.1\ngreenlet==0.4.13\nhpy==0.0.4.dev179+g9b5d200\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nreadline==6.2.4.1\nsetuptools==67.7.2\ntomli==2.0.1\nwheel==0.40.0\n",
         "stderr": ""
       },
       {
@@ -543,33 +403,13 @@
       {
         "command": [
           "/opt/python/pp39-pypy39_pp73/bin/python",
-          "-c",
-          "import setuptools; print(setuptools.__version__)"
-        ],
-        "return_code": 0,
-        "stdout": "67.7.2\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/pp39-pypy39_pp73/bin/python",
           "-m",
           "pip",
-          "--version"
+          "list",
+          "--format=freeze"
         ],
         "return_code": 0,
-        "stdout": "pip 23.1.2 from /opt/python/pp39-pypy39_pp73/lib/pypy3.9/site-packages/pip (python 3.9)\n",
-        "stderr": ""
-      },
-      {
-        "command": [
-          "/opt/python/pp39-pypy39_pp73/bin/python",
-          "-m",
-          "pip",
-          "freeze"
-        ],
-        "return_code": 0,
-        "stdout": "build==0.10.0\ncffi==1.15.1\ngreenlet==0.4.13\nhpy==0.0.4.dev179+g9b5d200\npackaging==23.1\npyproject_hooks==1.0.0\nreadline==6.2.4.1\ntomli==2.0.1\n",
+        "stdout": "build==0.10.0\ncffi==1.15.1\ngreenlet==0.4.13\nhpy==0.0.4.dev179+g9b5d200\npackaging==23.1\npip==23.1.2\npyproject_hooks==1.0.0\nreadline==6.2.4.1\nsetuptools==67.7.2\ntomli==2.0.1\nwheel==0.40.0\n",
         "stderr": ""
       }
     ]
