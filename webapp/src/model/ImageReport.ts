@@ -240,21 +240,8 @@ export class PythonEnvironment {
         return versionOutput?.split(' ')?.[1] ?? null
     }
 
-    get toolVersions(): [string, string][] {
+    get toolAndPackageVersions(): [string, string][] {
         const result: [string, string][] = []
-
-        const pipVersionOutput = this._getPythonOutput(['-m', 'pip', '--version'])
-        const pipVersion = pipVersionOutput?.split(' ')[1]
-        if (pipVersion) {
-            result.push(['pip', pipVersion])
-        }
-
-        const setuptoolsVersionOutput = this._getPythonOutput([
-            "-c", "import setuptools; print(setuptools.__version__)"
-        ])
-        if (setuptoolsVersionOutput) {
-            result.push(['setuptools', setuptoolsVersionOutput.trim()])
-        }
 
         const pipListOutput = this._getPythonOutput(['-m', 'pip', 'list', '--format=freeze'])
         if (pipListOutput) {
@@ -274,7 +261,7 @@ export class PythonEnvironment {
         }
         return [
             { id: `python.${this.identifier}`, label: labelHTML, value: this.pythonVersion },
-            ...this.toolVersions.map(([name, version]) => {
+            ...this.toolAndPackageVersions.map(([name, version]) => {
                 return { id: `python.${this.identifier}.${name}`, label: name, value: version }
             })
         ]
