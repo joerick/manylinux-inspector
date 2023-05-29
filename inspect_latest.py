@@ -1,3 +1,4 @@
+import argparse
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 import json
@@ -37,13 +38,17 @@ class Image:
     tag: str
 
 
-def get_latest_image(repository: Repository) -> Image | None:
+def fetch_repo_tags(repository: Repository) -> dict:
     response = requests.get(
         f"https://quay.io/api/v1/repository/{repository.namespace}/{repository.name}?includeTags=true"
     )
     response.raise_for_status()
     repo_info = response.json()
-    tags_dict = repo_info["tags"]
+    return repo_info["tags"]
+
+
+def get_latest_image(repository: Repository) -> Image | None:
+    tags_dict = fetch_repo_tags(repository)
 
     latest_tag = tags_dict.pop("latest")
     if not latest_tag:
@@ -72,6 +77,25 @@ def get_latest_image(repository: Repository) -> Image | None:
     return Image(repository=repository, tag=tag_name)
 
 
+def get_images(repository: Repository, *, within_days: int) -> list[Image]:
+    tags_dict = fetch_repo_tags(repository)
+
+    images = []
+
+    for tag_name, tag_info in tags_dict.items():
+        updated_timestamp = dateparser.parse(tag_info["last_modified"])
+        if not updated_timestamp:
+            print(f'Unable to parse timestamp {tag_info["last_modified"]}', file=sys.stderr)
+            continue
+
+        within_seconds = within_days * 24 * 60 * 60
+        earliest_timestamp = time.time() - within_seconds
+        if updated_timestamp.timestamp() > earliest_timestamp:
+            images.append(Image(repository=repository, tag=tag_name))
+
+    return images
+
+
 def inspect_image_wrapper(image: Image):
     print(f"Inspecting {image}", file=sys.stderr)
     inspect_and_save(f'quay.io/{image.repository.namespace}/{image.repository.name}:{image.tag}')
@@ -80,7 +104,17 @@ def inspect_image_wrapper(image: Image):
 executor = ThreadPoolExecutor(max_workers=4)
 
 def main():
-    images_to_inspect = []
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--within-days",
+        type=int,
+        help="Inspect images updated in the last N days. If not specified, only the latest image is inspected.",
+    )
+
+    args = parser.parse_args()
+
+    images_to_inspect: list[Image] = []
 
     print("Fetching latest images...", file=sys.stderr)
 
@@ -91,6 +125,12 @@ def main():
         if image:
             latest_images[f'quay.io/{image.repository.namespace}/{image.repository.name}'] = image.tag
             images_to_inspect.append(image)
+
+        if args.within_days is not None:
+            previous_images = get_images(repo, within_days=args.within_days)
+            for image in previous_images:
+                if image not in images_to_inspect:
+                    images_to_inspect.append(image)
 
     print(f"Found {len(images_to_inspect)} images to inspect", file=sys.stderr)
     for image in images_to_inspect:

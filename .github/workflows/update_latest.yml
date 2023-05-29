@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: 22 4 * * *
   workflow_dispatch:
+    inputs:
+      within_days:
+        description: 'Aside from the latest version, how many days back to inspect?'
+        type: number
+        default: 0
 
 jobs:
   update-latest:
@@ -20,7 +25,11 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - run: python inspect_all_latest.py
+      - run: python inspect_latest.py
+        if: github.event_name != 'workflow_dispatch'
+
+      - run: python inspect_latest.py --within-days ${{ github.event.inputs.within_days }}
+        if: github.event_name == 'workflow_dispatch'
 
       - name: Commit and push
 
