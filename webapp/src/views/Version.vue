@@ -10,6 +10,7 @@ import type ImageReport from '@/model/ImageReport';
 import { timeAgo } from '@/model/util';
 import { sortFields } from '@/model/ImageReport';
 import { orderBy } from 'lodash-es';
+import quote from 'shell-quote/quote'
 
 const route = useRoute()
 const standardName = computed(() => route.params.name as string)
@@ -167,7 +168,7 @@ const pythonsTable = computed(() => {
           <div class="log-entry"
                v-for="entry in selectedImage?.report.reportJSON.data.log"
                :class="{success: entry.return_code == 0}">
-            <div class="command">$ {{ entry.command.join(' ') }}</div>
+            <div class="command">$ {{ quote(entry.command) }}</div>
             <div class="stdout">{{ entry.stdout }}</div>
             <div class="stderr">{{ entry.stderr }}</div>
             <div class="return-code">{{ entry.return_code }}</div>

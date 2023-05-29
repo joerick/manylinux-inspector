@@ -5,3 +5,8 @@ declare namespace Intl {
     dateStyle?: 'full' | 'long' | 'medium' | 'short'
   }
 }
+
+declare module 'shell-quote/quote' {
+    function quote(args: string[]): string
+    export = quote
+}
