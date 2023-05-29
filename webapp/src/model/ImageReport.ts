@@ -256,9 +256,9 @@ export class PythonEnvironment {
             result.push(['setuptools', setuptoolsVersionOutput.trim()])
         }
 
-        const pipFreezeOutput = this._getPythonOutput(['-m', 'pip', 'freeze'])
-        if (pipFreezeOutput) {
-            for (const line of pipFreezeOutput?.trim().split('\n')) {
+        const pipListOutput = this._getPythonOutput(['-m', 'pip', 'list', '--format=freeze'])
+        if (pipListOutput) {
+            for (const line of pipListOutput?.trim().split('\n')) {
                 const [packageName, version] = line.split('==')
                 result.push([packageName, version])
             }

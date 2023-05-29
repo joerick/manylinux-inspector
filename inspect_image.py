@@ -99,7 +99,7 @@ def inspect_image(image: str):
             call([python_path, "--version"])
             call([python_path, "-c", "import setuptools; print(setuptools.__version__)"])
             call([python_path, "-m", "pip", "--version"])
-            call([python_path, "-m", "pip", "freeze"])
+            call([python_path, "-m", "pip", "list", "--format=freeze"])
 
     return {"log": commands_log}
 
