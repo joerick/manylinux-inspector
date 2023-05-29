@@ -1,4 +1,4 @@
-import { isEqual, flatMap, sortBy } from 'lodash-es'
+import { isEqual, flatMap, sortBy, isEqualWith } from 'lodash-es'
 import { regexExtract } from './util'
 
 export interface ImageReportJSON {
@@ -115,6 +115,16 @@ export default class ImageReport {
     }
 
     get operatingSystemLibc(): string | null {
+        // first look for musl libc
+        const muslInfo = this._getCommandOutput([/\/lib\/libc.musl-.*/], { part: 'stderr', allowFail: true })
+        if (muslInfo) {
+            // find the 'Version ' line
+            const match = muslInfo.match(/Version (.*)/)
+            if (match) {
+                return `musl libc ${match[1]}`
+            }
+        }
+
         const libcVersion = this._getCommandOutput(["ldd", "--version"], { part: 'all', allowFail: true })
         // return the first line
         return libcVersion?.split('\n')[0].trim() ?? null
@@ -136,11 +146,20 @@ export default class ImageReport {
         return installedPackageManagers.join(', ') || null
     }
 
-    _getCommandOutput(command: string[], options: { part?: OutputPart, allowFail?: boolean } = {}): string | null {
+    _getCommandOutput(command: (string|RegExp)[], options: { part?: OutputPart, allowFail?: boolean } = {}): string | null {
         const { part = 'stdout', allowFail = false } = options
 
         for (const logEntry of this.reportJSON.data.log) {
-            if (isEqual(logEntry.command, command)) {
+            const matches = command.every((part, index) => {
+                const logPart = logEntry.command[index]
+                if (typeof part == 'string') {
+                    return part == logPart
+                } else {
+                    return part.test(logPart)
+                }
+            })
+
+            if (matches) {
                 if (logEntry.return_code != 0 && !allowFail) {
                     return null
                 }
