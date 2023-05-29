@@ -1,4 +1,4 @@
-import { isEqual, flatMap, sortBy, isEqualWith } from 'lodash-es'
+import { isEqual, flatMap, sortBy, isEqualWith, orderBy } from 'lodash-es'
 import { regexExtract } from './util'
 
 export interface ImageReportJSON {
@@ -286,21 +286,28 @@ export class PythonEnvironment {
 }
 
 export function sortFields<T extends {id: string}>(fields: ArrayLike<T>|Iterable<T>) {
-    const regex = /python\.(\w*?)(\d)(\d+)-(.*)/
+    const regex = /python\.(\w*?)(\d)(\d+)-[^.]*.(.*)/
 
     const annotatedFields = Array.from(fields).map(field => {
         const keypath = field.id
         const match = keypath.match(regex)
         if (!match) return { field, keypath, priority: !field.id.startsWith('os') }
+        const packageName = match[4]
+        const isTransitiveDep = packageName && !['pip', 'setuptools', 'build'].includes(packageName)
         return {
             field,
             keypath,
             interpreter: match[1],
-            major: -parseInt(match[2]),
-            minor: -parseInt(match[3]),
+            major: parseInt(match[2]),
+            minor: parseInt(match[3]),
             rest: match[4],
+            isTransitiveDep,
         }
     })
 
-    return sortBy(annotatedFields, ['priority', 'interpreter', 'major', 'minor', 'rest', 'keypath']).map(item => item.field)
+    return orderBy(
+        annotatedFields,
+        ['priority', 'interpreter', 'major', 'minor', 'isTransitiveDep', 'rest', 'keypath'],
+        ['asc',      'asc',         'desc',  'desc',  'asc',            'asc',  'asc'],
+    ).map(item => item.field)
 }

@@ -91,6 +91,8 @@ watch(versionLoaders, (newState, oldState) => {
 })
 
 const expandedFieldIds = reactive(new Set<string>())
+const moreInfoFieldIds = reactive(new Set<string>())
+const INITIALLY_HIDDEN_BEHIND_MORE_IDS = /^python\.\S*\.(?!build|pip|setuptools).*$/
 
 interface FieldDescriptor {
   id: string
@@ -99,6 +101,8 @@ interface FieldDescriptor {
   hasChildren: boolean
   isExpanded: boolean
   isVisible: boolean
+  hasMoreButton: boolean
+  moreInfoVisible: boolean
   level: number
 }
 const fieldsById = computed(() => {
@@ -115,6 +119,8 @@ const fieldsById = computed(() => {
             hasChildren: false,
             isExpanded: expandedFieldIds.has(field.id),
             isVisible: true,
+            hasMoreButton: false,
+            moreInfoVisible: moreInfoFieldIds.has(field.id),
             level: 0,
           })
         }
@@ -122,11 +128,36 @@ const fieldsById = computed(() => {
     }
   }
 
-  for (const fieldDescriptor of result.values()) {
+  for (const fieldDescriptor of Array.from(result.values())) {
     let parent = result.get(getParentId(fieldDescriptor.id) ?? '')
+    const initiallyHiddenBehindMore = INITIALLY_HIDDEN_BEHIND_MORE_IDS.test(fieldDescriptor.id)
     if (!parent) continue
 
     fieldDescriptor.hasParent = true
+
+    if (initiallyHiddenBehindMore) {
+      if (!parent.hasMoreButton) {
+        // hasMoreButton just ensures that we only add one 'more' button
+        parent.hasMoreButton = true
+
+        parent.moreInfoVisible = moreInfoFieldIds.has(parent.id)
+        const moreInfoFieldId = `${parent.id}.~moreInfo`
+        result.set(moreInfoFieldId, {
+          id: moreInfoFieldId,
+          label: parent.moreInfoVisible ? 'less' : 'more',
+          hasParent: true,
+          hasChildren: false,
+          isExpanded: false,
+          isVisible: parent.isExpanded,
+          hasMoreButton: false,
+          moreInfoVisible: false,
+          level: parent.level + 1,
+        })
+      }
+    }
+    if (!parent.moreInfoVisible && initiallyHiddenBehindMore) {
+      fieldDescriptor.isVisible = false
+    }
 
     while (parent) {
       fieldDescriptor.level += 1
@@ -160,14 +191,27 @@ function getFieldValue(fieldId: string, version: Version) {
 }
 
 function rowClicked(event: MouseEvent, field: FieldDescriptor) {
-  if (!field.hasChildren) return
-  event.preventDefault()
-  event.stopPropagation()
+  if (field.hasChildren) {
+    event.preventDefault()
+    event.stopPropagation()
 
-  if (expandedFieldIds.has(field.id)) {
-    expandedFieldIds.delete(field.id)
-  } else {
-    expandedFieldIds.add(field.id)
+    if (expandedFieldIds.has(field.id)) {
+      expandedFieldIds.delete(field.id)
+    } else {
+      expandedFieldIds.add(field.id)
+    }
+  }
+
+  if (field.id.endsWith('.~moreInfo')) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const parentId = getParentId(field.id)!
+    if (moreInfoFieldIds.has(parentId)) {
+      moreInfoFieldIds.delete(parentId)
+    } else {
+      moreInfoFieldIds.add(parentId)
+    }
   }
 }
 
@@ -203,7 +247,8 @@ function rowClicked(event: MouseEvent, field: FieldDescriptor) {
             :class="{parent: field.hasChildren,
                      expanded: field.isExpanded,
                      hidden: !field.isVisible,
-                     [`level-${field.level}`]: true}"
+                     [`level-${field.level}`]: true,
+                     'is-more-button': field.id.endsWith('.~moreInfo')}"
             @click="rowClicked($event, field)">
           <td>
             <span class="name" v-html="field.label"></span>
@@ -352,5 +397,11 @@ tr.level-1 {
 }
 tr:last-child {
   border-bottom: 1px solid #DBDBDB;
+}
+tr.is-more-button {
+  td {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }
 </style>
