@@ -1,6 +1,6 @@
 # Manylinux Inspector
 
-<img width="1333" alt="image" src="https://github.com/joerick/manylinux-inspector/assets/1244307/20dc9f61-e452-4e7b-a9c7-b22bb227e671">
+<img width="1333" alt="image" src="https://github.com/joerick/manylinux-inspector/assets/1244307/33f455cc-f520-4bb3-a035-a09f35dd856d">
 
 [This website](https://manylinuxinspector.joerick.me/) provides an overview of the images created by the [manylinux project](https://github.com/pypa/manylinux).
 
