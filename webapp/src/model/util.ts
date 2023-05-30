@@ -55,49 +55,6 @@ export function formatList(list: string[]): string {
     }
 }
 
-function listKeypaths(object: any): string[] {
-  const keypaths = [];
-  for (const key in object) {
-    if (object.hasOwnProperty(key)) {
-      if (typeof object[key] === 'object') {
-        const subkeypaths = listKeypaths(object[key]);
-        for (const subkeypath of subkeypaths) {
-          keypaths.push(key + '.' + subkeypath);
-        }
-      } else {
-        keypaths.push(key);
-      }
-    }
-  }
-  return keypaths;
-}
-
-interface Object {
-    __cachedProperty?: {
-        [key: string]: any;
-    }
-}
-export function cachedProperty<This extends Object, Return>(
-    target: (this: This) => Return,
-    context: ClassGetterDecoratorContext<This, (this: This) => Return>
-) {
-    const methodName = String(context.name);
-
-    function replacementMethod(this: This): Return {
-        if (!this.__cachedProperty) {
-            this.__cachedProperty = {};
-        }
-        if (methodName in this.__cachedProperty) {
-            return this.__cachedProperty[methodName];
-        }
-        const result = target.call(this);
-        this.__cachedProperty[methodName] = result;
-        return result;
-    }
-
-    return replacementMethod;
-}
-
 export function entries<T>(object: {[key: string]: T}): [string, T][] {
     return Object.keys(object).map(key => [key, object[key]]);
 }
