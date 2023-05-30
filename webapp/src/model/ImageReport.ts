@@ -272,6 +272,8 @@ export class PythonEnvironment {
     }
 }
 
+const IMPORTANT_PACKAGES = ['pip', 'setuptools', 'build', 'wheel']
+
 export function sortFields<T extends {id: string}>(fields: ArrayLike<T>|Iterable<T>) {
     const regex = /python\.(\w*?)(\d)(\d+)-[^.]*.(.*)/
 
@@ -280,7 +282,7 @@ export function sortFields<T extends {id: string}>(fields: ArrayLike<T>|Iterable
         const match = keypath.match(regex)
         if (!match) return { field, keypath, priority: !field.id.startsWith('os') }
         const packageName = match[4]
-        const isTransitiveDep = packageName && !['pip', 'setuptools', 'build'].includes(packageName)
+        const isTransitiveDep = packageName && !IMPORTANT_PACKAGES.includes(packageName)
         return {
             field,
             keypath,

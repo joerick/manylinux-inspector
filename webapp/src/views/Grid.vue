@@ -92,7 +92,7 @@ watch(versionLoaders, (newState, oldState) => {
 
 const expandedFieldIds = reactive(new Set<string>())
 const moreInfoFieldIds = reactive(new Set<string>())
-const INITIALLY_HIDDEN_BEHIND_MORE_IDS = /^python\.\S*\.(?!build|pip|setuptools).*$/
+const INITIALLY_HIDDEN_BEHIND_MORE_IDS = /^python\.\S*\.(?!build|pip|setuptools|wheel).*$/
 
 interface FieldDescriptor {
   id: string
