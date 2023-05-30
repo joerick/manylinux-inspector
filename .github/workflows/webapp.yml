@@ -8,6 +8,8 @@ on:
   workflow_call:
     inputs:
       ref:
+        # when this workflow is invoked by update_latest, the ref needs to be
+        # passed in, because the default reads from github.event.ref
         type: string
         description: "The ref to build/deploy"
         default: ""
