@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import json
+import os
 import subprocess
 import sys
 import uuid
@@ -148,11 +149,22 @@ class DockerContainer:
     ) -> None:
         assert isinstance(self.name, str)
 
+        # remove the container
         subprocess.run(
             ["docker", "rm", "--force", "-v", self.name],
             stdout=subprocess.DEVNULL,
             check=False,
         )
+        if "CLEANUP_OLD_IMAGES" in os.environ:
+            subprocess.run(
+                ["docker", "rmi", "--force", self.image],
+                check=False,
+            )
+            subprocess.run(
+                ["docker", "image", "prune", "--force"],
+                check=False,
+            )
+
         self.name = None
 
     def call(self, args: Sequence[str]) -> CallResult:

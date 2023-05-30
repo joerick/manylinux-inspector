@@ -28,9 +28,13 @@ jobs:
         run: pip install -r requirements.txt
 
       - run: python inspect_latest.py
+        env:
+          CLEANUP_OLD_IMAGES: "true"
         if: github.event_name != 'workflow_dispatch'
 
       - run: python inspect_latest.py --within-days ${{ github.event.inputs.within_days }}
+        env:
+          CLEANUP_OLD_IMAGES: "true"
         if: github.event_name == 'workflow_dispatch'
 
       - name: Commit and push
