@@ -83,6 +83,10 @@ def get_images(repository: Repository, *, within_days: int) -> list[Image]:
     images = []
 
     for tag_name, tag_info in tags_dict.items():
+        if tag_name == "latest":
+            # already handled elsewhere
+            continue
+
         updated_timestamp = dateparser.parse(tag_info["last_modified"])
         if not updated_timestamp:
             print(f'Unable to parse timestamp {tag_info["last_modified"]}', file=sys.stderr)
