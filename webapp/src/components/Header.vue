@@ -15,12 +15,15 @@ const menuOpen = ref(false)
   <header>
     <fixed-horizontal :height="60" :z-index="20">
       <div class="main">
-        <router-link :to="{name: 'grid'}" class="left">
+        <div class="left">
+          <router-link :to="{name: 'grid'}" class="site-link">
             <img class="logo" src="@/assets/icon.svg" alt="Icon" />
             <div class="site-name">
               Manylinux Inspector
             </div>
-        </router-link>
+          </router-link>
+          <a class="about-link" href="https://github.com/joerick/manylinux-inspector#readme">About</a>
+        </div>
         <div class="mobile-expand-button" @click="menuOpen = !menuOpen">
           <div class="l"></div>
           <div class="l"></div>
@@ -78,14 +81,31 @@ header {
   font-size: 18px;
   flex: 1;
 }
-.left, .nav-items {
+.about-link {
+  font-size: 13px;
+  opacity: 0.4;
+  color: white;
+  font-weight: 400;
+  margin-left: 15px;
+
+  position: relative;
+  top: 2px;
+
+  @media (max-width: 599px) {
+    display: none;
+  }
+}
+.left, .nav-items, .site-link {
   display: flex;
   align-items: center;
   height: 100%;
 }
 .left {
-  gap: 14px;
   height: 60px;
+  align-items: center;
+}
+.site-link {
+  gap: 14px;
 }
 .nav-items {
   justify-content: flex-end;
