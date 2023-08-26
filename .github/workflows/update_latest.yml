@@ -12,6 +12,9 @@ on:
 jobs:
   update-latest:
     runs-on: ubuntu-latest
+    concurrency:
+      group: update_latest
+
     outputs:
       ref: ${{ steps.commit.outputs.ref }}
     steps:
