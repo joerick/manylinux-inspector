@@ -247,6 +247,10 @@ export class PythonEnvironment {
         if (pipListOutput) {
             for (const line of pipListOutput?.trim().split('\n')) {
                 const [packageName, version] = line.split('==')
+                if (!version) {
+                    // ignore lines that don't parse
+                    continue
+                }
                 result.push([packageName, version])
             }
         }
