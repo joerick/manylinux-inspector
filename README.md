@@ -20,3 +20,26 @@ The data in this site comes from a scheduled Github Action, which runs daily to:
 The frontend site is a Typescript/Vue.js app which loads the output of the inspection phase, parses it and displays the information.
 
 All the code is open-source and on Github!
+
+## Developing
+
+To run the webapp, you'll need Node & npm installed. Then do :
+
+```
+cd webapp
+npm install
+npm run dev
+```
+
+That runs the dev server locally.
+
+To test the inspection scripts, you can run them locally like so:
+
+```
+python -m venv env
+. env/bin/activate
+pip install -r requirements.txt
+
+python inspect_latest.py  # checks for new images not inspected yet, and writes them to /data
+python inspect_image.py  # checks a single image and returns the inspection result on stdout
+```
