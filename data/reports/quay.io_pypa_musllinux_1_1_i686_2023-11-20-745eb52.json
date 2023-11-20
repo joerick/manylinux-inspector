@@ -1,0 +1,383 @@
+{
+  "metadata": {
+    "image": "quay.io/pypa/musllinux_1_1_i686:2023-11-20-745eb52",
+    "generated_at": 1700469988.967263
+  },
+  "data": {
+    "log": [
+      {
+        "command": [
+          "cat",
+          "/etc/os-release"
+        ],
+        "return_code": 0,
+        "stdout": "NAME=\"Alpine Linux\"\nID=alpine\nVERSION_ID=3.12.12\nPRETTY_NAME=\"Alpine Linux v3.12\"\nHOME_URL=\"https://alpinelinux.org/\"\nBUG_REPORT_URL=\"https://bugs.alpinelinux.org/\"\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "cat",
+          "/etc/redhat-release"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "cat: can't open '/etc/redhat-release': No such file or directory\n"
+      },
+      {
+        "command": [
+          "env"
+        ],
+        "return_code": 0,
+        "stdout": "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nHOSTNAME=41bcf424cf69\nAUDITWHEEL_POLICY=musllinux_1_1\nAUDITWHEEL_ARCH=i686\nAUDITWHEEL_PLAT=musllinux_1_1_i686\nLC_ALL=en_US.UTF-8\nLANG=en_US.UTF-8\nLANGUAGE=en_US.UTF-8\nDEVTOOLSET_ROOTPATH=\nLD_LIBRARY_PATH=\nPKG_CONFIG_PATH=/usr/local/lib/pkgconfig\nSSL_CERT_FILE=/opt/_internal/certs.pem\nHOME=/root\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "ldd",
+          "--version"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "musl libc (i386)\nVersion 1.1.24\nDynamic Program Loader\nUsage: /lib/ld-musl-i386.so.1 [options] [--] pathname\n"
+      },
+      {
+        "command": [
+          "sh",
+          "-c",
+          "ls -d /lib/libc.musl-*"
+        ],
+        "return_code": 0,
+        "stdout": "/lib/libc.musl-x86.so.1\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/lib/libc.musl-x86.so.1"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "musl libc (i386)\nVersion 1.1.24\nDynamic Program Loader\nUsage: /lib/libc.musl-x86.so.1 [options] [--] pathname [args]\n"
+      },
+      {
+        "command": [
+          "which",
+          "yum"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "apt-get"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "apk"
+        ],
+        "return_code": 0,
+        "stdout": "/sbin/apk\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "dnf"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "pacman"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "zypper"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "emerge"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "auditwheel",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "auditwheel 5.4.0 installed at\n/opt/_internal/pipx/venvs/auditwheel/lib/python3.10/site-packages/auditwheel\n(python 3.10)\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "patchelf",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "patchelf 0.17.2\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "git version 2.42.1\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "curl",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "curl 7.79.1 (i586-alpine-linux-musl) libcurl/7.79.1 OpenSSL/1.1.1o zlib/1.2.12 nghttp2/1.41.0\nRelease-Date: 2021-09-22\nProtocols: dict file ftp ftps gopher gophers http https imap imaps mqtt pop3 pop3s rtsp smb smbs smtp smtps telnet tftp \nFeatures: alt-svc AsynchDNS HSTS HTTP2 HTTPS-proxy IPv6 Largefile libz NTLM NTLM_WB SSL TLS-SRP UnixSockets\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "autoconf",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "autoconf (GNU Autoconf) 2.71\nCopyright (C) 2021 Free Software Foundation, Inc.\nLicense GPLv3+/Autoconf: GNU GPL version 3 or later\n<https://gnu.org/licenses/gpl.html>, <https://gnu.org/licenses/exceptions.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by David J. MacKenzie and Akim Demaille.\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "automake",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "automake (GNU automake) 1.16.5\nCopyright (C) 2021 Free Software Foundation, Inc.\nLicense GPLv2+: GNU GPL version 2 or later <https://gnu.org/licenses/gpl-2.0.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by Tom Tromey <tromey@redhat.com>\n       and Alexandre Duret-Lutz <adl@gnu.org>.\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "libtool",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "libtool (GNU libtool) 2.4.7\nWritten by Gordon Matzigkeit, 1996\n\nCopyright (C) 2014 Free Software Foundation, Inc.\n\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "sqlite3",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "3.44.0 2023-11-01 11:23:50 17129ba1ff7f0daf37100ee82d507aef7827cf38de1866e2633096ae6ad81301 (32-bit)\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "openssl",
+          "version"
+        ],
+        "return_code": 0,
+        "stdout": "OpenSSL 1.1.1o  3 May 2022\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "pipx",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "1.2.1\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "pipx",
+          "list",
+          "--short"
+        ],
+        "return_code": 0,
+        "stdout": "auditwheel 5.4.0\ncmake 3.27.7\npatchelf 0.17.2.1\nswig 4.1.1.post0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "sh",
+          "-c",
+          "ls -d /opt/python/*/bin/python"
+        ],
+        "return_code": 0,
+        "stdout": "/opt/python/cp310-cp310/bin/python\n/opt/python/cp311-cp311/bin/python\n/opt/python/cp312-cp312/bin/python\n/opt/python/cp36-cp36m/bin/python\n/opt/python/cp37-cp37m/bin/python\n/opt/python/cp38-cp38/bin/python\n/opt/python/cp39-cp39/bin/python\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.10.13\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.0.3\npackaging==23.2\npip==23.3.1\npyproject_hooks==1.0.0\nsetuptools==68.2.2\ntomli==2.0.1\nwheel==0.41.3\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.11.6\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.0.3\npackaging==23.2\npip==23.3.1\npyproject_hooks==1.0.0\nsetuptools==68.2.2\nwheel==0.41.3\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp312-cp312/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.12.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp312-cp312/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.0.3\npackaging==23.2\npip==23.3.1\npyproject_hooks==1.0.0\nsetuptools==68.2.2\nwheel==0.41.3\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp36-cp36m/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.6.15\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp36-cp36m/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==0.9.0\nimportlib-metadata==4.8.3\npackaging==21.3\npep517==0.13.1\npip==21.3.1\npyparsing==3.1.1\nsetuptools==59.6.0\ntomli==1.2.3\ntyping_extensions==4.1.1\nwheel==0.37.1\nzipp==3.6.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp37-cp37m/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.7.17\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp37-cp37m/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.0.3\nimportlib-metadata==6.7.0\npackaging==23.2\npip==23.3.1\npyproject_hooks==1.0.0\nsetuptools==68.0.0\ntomli==2.0.1\ntyping_extensions==4.7.1\nwheel==0.41.3\nzipp==3.15.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.8.18\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.0.3\nimportlib-metadata==6.8.0\npackaging==23.2\npip==23.3.1\npyproject_hooks==1.0.0\nsetuptools==68.2.2\ntomli==2.0.1\nwheel==0.41.3\nzipp==3.17.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.9.18\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.0.3\nimportlib-metadata==6.8.0\npackaging==23.2\npip==23.3.1\npyproject_hooks==1.0.0\nsetuptools==68.2.2\ntomli==2.0.1\nwheel==0.41.3\nzipp==3.17.0\n",
+        "stderr": ""
+      }
+    ]
+  }
+}
