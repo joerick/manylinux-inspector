@@ -237,7 +237,15 @@ export class PythonEnvironment {
 
     get pythonVersion(): string | null {
         const versionOutput = this._getPythonOutput(['--version'], { part: 'all' })
-        return versionOutput?.split(' ')?.[1] ?? null
+        const languageVersion = versionOutput?.split(' ')?.[1] ?? null
+        if (!languageVersion) {
+            return null
+        }
+        const pypyVersion = regexExtract(versionOutput, /\[PyPy (\S+)/i)
+        if (pypyVersion) {
+            return `${languageVersion} | ${pypyVersion}`
+        }
+        return languageVersion
     }
 
     get toolAndPackageVersions(): [string, string][] {
