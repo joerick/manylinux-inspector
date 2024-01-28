@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "last_updated": 1706010531.4657323
+    "last_updated": 1706471197.4633327
   },
   "data": {
-    "quay.io/pypa/manylinux1_x86_64": "2023-12-10-cee9633",
-    "quay.io/pypa/manylinux1_i686": "2023-12-10-cee9633",
+    "quay.io/pypa/manylinux1_x86_64": "2024-01-28-7b6687a",
+    "quay.io/pypa/manylinux1_i686": "2024-01-28-7b6687a",
     "quay.io/pypa/manylinux2014_x86_64": "2024-01-23-12ffabc",
     "quay.io/pypa/manylinux2014_i686": "2024-01-23-12ffabc",
     "quay.io/pypa/manylinux2014_aarch64": "2024-01-23-12ffabc",
