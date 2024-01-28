@@ -191,7 +191,12 @@ h3 {
   margin-top: 20px;
 }
 :deep(code) {
+  font-size: 0.9em;
   background-color: rgba(0, 0, 0, 0.05);
+  padding: 1px 4px;
+}
+table {
+  font-size: 0.95em;
 }
 table {
   display: block;
@@ -209,7 +214,7 @@ table {
 }
 th, td {
   margin: 0;
-  padding: 4px 16px;
+  padding: 3px 14px;
   padding-left: 0;
   background: white;
 }
@@ -227,10 +232,11 @@ dl {
   grid-template-columns: auto auto;
   width: max-content;
   max-width: 100%;
+  gap: 1px 14px;
 }
 dt {
   font-weight: 600;
-  margin-right: 10px;
+  // margin-right: 10px;
   text-align: right;
 }
 
