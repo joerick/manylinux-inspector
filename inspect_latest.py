@@ -68,11 +68,15 @@ def get_latest_image(repository: Repository) -> Image | None:
         return None
 
     # find the tag whose manifest matches 'latest'
-    tag_name = next(
-        name
-        for (name, info) in tags_dict.items()
-        if info["manifest_digest"] == latest_tag["manifest_digest"]
-    )
+    try:
+        tag_name = next(
+            name
+            for (name, info) in tags_dict.items()
+            if info["manifest_digest"] == latest_tag["manifest_digest"]
+        )
+    except StopIteration:
+        print(f'No tag found for {repository} matching latest manifest {latest_tag["manifest_digest"]}', file=sys.stderr)
+        return None
 
     return Image(repository=repository, tag=tag_name)
 
