@@ -20,7 +20,7 @@ const route = useRoute()
 const searchTerm = computed({
   get: () => {
     const query = route.query as { q?: string }
-    return query.q ?? 'latest'
+    return query.q ?? ''
   },
   set: (value) => {
     router.replace({ query: { q: value }})
@@ -32,7 +32,7 @@ const versionRefs = computed(() => {
   if (!index) {
     return []
   }
-  const refs = index.search(searchTerm.value)
+  const refs = index.search(searchTerm.value || 'latest')
   refs.sort((a, b) => {
     const compareNameResult = compareStandardNames(a.name, b.name)
     if (compareNameResult !== 0) {
@@ -224,7 +224,7 @@ function rowClicked(event: MouseEvent, field: FieldDescriptor) {
     <fixed-horizontal-sticky-vertical :height="35" :z-index="10" :sticky-top="0">
       <div class="search-bar">
         <img class="icon" src="@/assets/search-menu-icon.svg" alt="search-menu" role="button" />
-        <input type="text" placeholder="all" v-model="searchTerm" spellcheck="false" />
+        <input type="text" placeholder="latest" v-model="searchTerm" spellcheck="false" />
       </div>
     </fixed-horizontal-sticky-vertical>
     <table cellspacing="0">
