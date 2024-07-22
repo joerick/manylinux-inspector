@@ -198,8 +198,7 @@ export class PythonEnvironment {
         return pathParts[3]
     }
 
-    get identifierInfo() {
-        const identifier = this.identifier
+    static identifierInfo(identifier: string) {
         let match = identifier.match(/^([cp]p)(\d)(\d+).*/)
         if (!match) {
             console.warn('unknown python environment identifier', identifier)
@@ -220,13 +219,18 @@ export class PythonEnvironment {
             interpreter = interpreterId
         }
 
-        let variant
+        let variant: string|undefined = identifier.match(/[a-z]+$/)?.[0]
 
-        if (major == 2 && minor == 7) {
-            // get the letters at the end of the id
-            variant = this.identifier.match(/[a-z]+$/)![0]
+        if (variant == 'm' && major == 3) {
+            // there is not non-m variant for python 3, so it's just python 3
+            variant = undefined
         }
+
         return { interpreterId, interpreter, major, minor, variant }
+    }
+
+    get identifierInfo() {
+        return PythonEnvironment.identifierInfo(this.identifier)
     }
 
     get prettyName(): { name: string, variant?: string } {
@@ -287,28 +291,35 @@ export class PythonEnvironment {
 const IMPORTANT_PACKAGES = ['pip', 'setuptools', 'build', 'wheel']
 
 export function sortFields<T extends {id: string}>(fields: ArrayLike<T>|Iterable<T>) {
-    const regex = /python\.(\w*?)(\d)(\d+)-[^.]*.(.*)/
+    const regex = /python\.([^.]*)\.?(.*)/
 
     const annotatedFields = Array.from(fields).map(field => {
         const keypath = field.id
-        const match = keypath.match(regex)
-        if (!match) return { field, keypath, priority: !field.id.startsWith('os') }
-        const packageName = match[4]
+
+        const [_, pythonIdentifier, packageName] = keypath.match(regex) ?? []
+        if (!pythonIdentifier) {
+            // Global tool or OS field
+            return { field, keypath, priority: !field.id.startsWith('os') }
+        }
         const isTransitiveDep = packageName && !IMPORTANT_PACKAGES.includes(packageName)
+
+        const interpreterInfo = PythonEnvironment.identifierInfo(pythonIdentifier)
+
         return {
             field,
             keypath,
-            interpreter: match[1],
-            major: parseInt(match[2]),
-            minor: parseInt(match[3]),
-            rest: match[4],
+            interpreter: interpreterInfo.interpreterId,
+            major: interpreterInfo.major,
+            minor: interpreterInfo.minor,
+            variant: interpreterInfo.variant,
+            rest: packageName,
             isTransitiveDep,
         }
     })
 
     return orderBy(
         annotatedFields,
-        ['priority', 'interpreter', 'major', 'minor', 'isTransitiveDep', 'rest', 'keypath'],
-        ['asc',      'asc',         'desc',  'desc',  'asc',            'asc',  'asc'],
+        ['priority', 'interpreter', 'major', 'minor', 'variant', 'isTransitiveDep', 'rest', 'keypath'],
+        ['asc',      'asc',         'desc',  'desc',  'desc',    'asc',             'asc',  'asc'],
     ).map(item => item.field)
 }
