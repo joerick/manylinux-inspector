@@ -73,7 +73,9 @@ export function regexExtract(text: string|null, regex: RegExp): string|null {
 
 export function dateFromImageTag(tag: string) {
     // tag looks like 2023-04-09-db9a92f
-    const [year, month, day] = tag.split('-').slice(0, 3).map(s => parseInt(s))
+    console.log(tag)
+    const [year, month, day] = tag.split(/[-\.]/g).slice(0, 3).map(s => parseInt(s))
+    console.log(year, month, day)
     return new Date(year, month - 1, day)
 }
 
