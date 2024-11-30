@@ -87,6 +87,10 @@ export default class ImageReport {
             "pipx",
             regexExtract(this._getCommandOutput(['pipx', '--version']), /(\S+)/)
         )
+        optionalSet(
+            "gcc",
+            regexExtract(this._getCommandOutput(['gcc', '--version']), /gcc \(GCC\) (\S+)/)
+        )
 
         return Array.from(results.entries())
     }
