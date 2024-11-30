@@ -5,12 +5,19 @@ interface Standard {
 
 export const standards: Standard[] = [
     {
+        name: 'manylinux_2_34',
+        description:
+            'manylinux_2_34 is the latest of the manylinux standards, with a glibc version of 2.34.' +
+            "It's based on AlmaLinux, which is an community-driven Linux distribution that forked from CentOS and RHEL." +
+            'Its tag was defined in the generic PEP600.',
+    },
+    {
         name: 'manylinux_2_28',
-        description: "manylinux_2_28 is the latest of the manylinux standards, with a glibc version of 2.28. It's based on AlmaLinux, which is an community-driven Linux distribution that forked from CentOS and RHEL. Its tag was defined in the generic PEP600.",
+        description: "manylinux_2_28 is a previous manylinux standard, with a glibc version of 2.28. It's based on AlmaLinux, which is an community-driven Linux distribution that forked from CentOS and RHEL. Its tag was defined in the generic PEP600.",
     },
     {
         name: 'manylinux_2_24',
-        description: "manylinux_2_28 is a previous manylinux standard, with a glibc version of 2.24. It's the only manylinux standard based on Debian. Its tag was defined in the generic PEP600."
+        description: "manylinux_2_24 is a previous manylinux standard, with a glibc version of 2.24. It's the only manylinux standard based on Debian. Its tag was defined in the generic PEP600.",
     },
     {
         name: 'manylinux2014',
