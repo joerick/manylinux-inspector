@@ -17,7 +17,7 @@ export const standards: Standard[] = [
     },
     {
         name: 'manylinux_2_24',
-        description: "manylinux_2_28 is a previous manylinux standard, with a glibc version of 2.24. It's the only manylinux standard based on Debian. Its tag was defined in the generic PEP600.",
+        description: "manylinux_2_24 is a previous manylinux standard, with a glibc version of 2.24. It's the only manylinux standard based on Debian. Its tag was defined in the generic PEP600.",
     },
     {
         name: 'manylinux2014',
