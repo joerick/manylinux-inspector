@@ -91,8 +91,9 @@ def inspect_image(image: str):
         call(["libtool", "--version"], allow_fail=True)
         call(["sqlite3", "--version"], allow_fail=True)
         call(["openssl", "version"], allow_fail=True)
-        call(["pipx", "--version"])
-        call(["pipx", "list", "--short"])
+        call(["pipx", "--version"], allow_fail=True)
+        call(["pipx", "list", "--short"], allow_fail=True)
+        call(["gcc", "--version"], allow_fail=True)
 
         pythons = glob('/opt/python/*/bin/python')
 
