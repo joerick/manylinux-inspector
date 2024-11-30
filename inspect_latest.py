@@ -29,6 +29,8 @@ def get_repositories() -> list[Repository]:
             name=d["name"],
         )
         for d in repository_dicts
+        # exclude base images, which aren't for public consumption
+        if not d["name"].endswith("_base")
     ]
 
 
