@@ -106,8 +106,12 @@ def get_images(repository: Repository, *, within_days: int) -> list[Image]:
 
 def inspect_image_wrapper(image: Image):
     print(f"Inspecting {image}", file=sys.stderr)
-    inspect_and_save(f'quay.io/{image.repository.namespace}/{image.repository.name}:{image.tag}')
-    print(f"Inspecting {image} complete.", file=sys.stderr)
+    try:
+        inspect_and_save(f'quay.io/{image.repository.namespace}/{image.repository.name}:{image.tag}')
+        print(f"Inspecting {image} complete.", file=sys.stderr)
+    except Exception as e:
+        print(f"Error inspecting {image}: {e}", file=sys.stderr)
+        print(f"::error title=Error inspecting {image}::{e}", file=sys.stderr)
 
 executor = ThreadPoolExecutor(max_workers=4)
 
