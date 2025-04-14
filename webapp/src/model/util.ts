@@ -102,7 +102,7 @@ export function timeAgo(date: Date): string {
 }
 
 export function compareArchs(a: string, b: string) {
-    const order = ['x86_64', 'i686', 'aarch64', 'ppc64le', 's390x']
+    const order = ['multiarch', 'x86_64', 'i686', 'aarch64', 'ppc64le', 's390x']
     const aPos = order.indexOf(a)
     const bPos = order.indexOf(b)
 
