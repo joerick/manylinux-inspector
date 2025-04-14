@@ -24,11 +24,16 @@ class ImageNameParts:
 
     @staticmethod
     def from_image_name(image_name: str):
-        regex = r'^(?P<domain>.*)/(?P<org>.*)/(?P<name>[a-z]*(?:\d|\d\d\d\d|(?:_\d+)+))_(?P<arch>.*):(?P<tag>.*)$'
+        regex = r'^(?P<domain>.*)/(?P<org>.*)/(?P<name>[a-z]*(?:\d|\d\d\d\d|(?:_\d+)+))(?:_(?P<arch>.*))?:(?P<tag>.*)$'
         match = re.match(regex, image_name)
         if not match:
             raise ValueError(f"Image name {image_name} does not match regex {regex}")
-        return ImageNameParts(**match.groupdict())
+
+        parts_dict = match.groupdict()
+        if not parts_dict['arch']:
+            parts_dict['arch'] = 'multiarch'
+
+        return ImageNameParts(**parts_dict)
 
 
 def generate_versions_reports():
@@ -44,6 +49,9 @@ def generate_versions_reports():
         version_id = (report_name_parts.domain, report_name_parts.org, report_name_parts.name, report_name_parts.tag)
         if version_id not in reports_by_versions:
             reports_by_versions[version_id] = {}
+
+        if not report_name_parts.arch:
+            breakpoint()
 
         reports_by_versions[version_id][report_name_parts.arch] = report
 
