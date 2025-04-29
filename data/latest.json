@@ -1,10 +1,8 @@
 {
   "metadata": {
-    "last_updated": 1745732790.622327
+    "last_updated": 1745952534.6878715
   },
   "data": {
-    "quay.io/pypa/manylinux1_x86_64": "2024-04-29-76807b8",
-    "quay.io/pypa/manylinux1_i686": "2024-04-29-76807b8",
     "quay.io/pypa/manylinux2014_x86_64": "2025.04.26-0",
     "quay.io/pypa/manylinux2014_i686": "2025.04.26-0",
     "quay.io/pypa/manylinux2014_aarch64": "2025.04.26-0",
