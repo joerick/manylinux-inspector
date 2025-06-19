@@ -1,0 +1,426 @@
+{
+  "metadata": {
+    "image": "quay.io/pypa/manylinux_2_34_s390x:2025.06.19-1",
+    "generated_at": 1750355473.4239194
+  },
+  "data": {
+    "log": [
+      {
+        "command": [
+          "cat",
+          "/etc/os-release"
+        ],
+        "return_code": 0,
+        "stdout": "NAME=\"AlmaLinux\"\nVERSION=\"9.6 (Sage Margay)\"\nID=\"almalinux\"\nID_LIKE=\"rhel centos fedora\"\nVERSION_ID=\"9.6\"\nPLATFORM_ID=\"platform:el9\"\nPRETTY_NAME=\"AlmaLinux 9.6 (Sage Margay)\"\nANSI_COLOR=\"0;34\"\nLOGO=\"fedora-logo-icon\"\nCPE_NAME=\"cpe:/o:almalinux:almalinux:9::baseos\"\nHOME_URL=\"https://almalinux.org/\"\nDOCUMENTATION_URL=\"https://wiki.almalinux.org/\"\nBUG_REPORT_URL=\"https://bugs.almalinux.org/\"\n\nALMALINUX_MANTISBT_PROJECT=\"AlmaLinux-9\"\nALMALINUX_MANTISBT_PROJECT_VERSION=\"9.6\"\nREDHAT_SUPPORT_PRODUCT=\"AlmaLinux\"\nREDHAT_SUPPORT_PRODUCT_VERSION=\"9.6\"\nSUPPORT_END=2032-06-01\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "cat",
+          "/etc/redhat-release"
+        ],
+        "return_code": 0,
+        "stdout": "AlmaLinux release 9.6 (Sage Margay)\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "env"
+        ],
+        "return_code": 0,
+        "stdout": "PATH=/usr/local/bin:/opt/rh/gcc-toolset-14/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nHOSTNAME=18963cba19eb\nLANG=en_US.UTF-8\nAUDITWHEEL_POLICY=manylinux_2_34\nAUDITWHEEL_ARCH=s390x\nAUDITWHEEL_PLAT=manylinux_2_34_s390x\nLC_ALL=en_US.UTF-8\nLANGUAGE=en_US.UTF-8\nDEVTOOLSET_ROOTPATH=/opt/rh/gcc-toolset-14/root\nLD_LIBRARY_PATH=/opt/rh/gcc-toolset-14/root/usr/lib64:/opt/rh/gcc-toolset-14/root/usr/lib:/opt/rh/gcc-toolset-14/root/usr/lib64/dyninst:/opt/rh/gcc-toolset-14/root/usr/lib/dyninst\nPKG_CONFIG_PATH=/usr/local/lib/pkgconfig\nSSL_CERT_FILE=/opt/_internal/certs.pem\nHOME=/root\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "ldd",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "ldd (GNU libc) 2.34\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\nWritten by Roland McGrath and Ulrich Drepper.\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "sh",
+          "-c",
+          "ls -d /lib/libc.musl-*"
+        ],
+        "return_code": 2,
+        "stdout": "",
+        "stderr": "ls: cannot access '/lib/libc.musl-*': No such file or directory\n"
+      },
+      {
+        "command": [
+          "which",
+          "yum"
+        ],
+        "return_code": 0,
+        "stdout": "/usr/bin/yum\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "apt-get"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "which: no apt-get in (/usr/local/bin:/opt/rh/gcc-toolset-14/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)\n"
+      },
+      {
+        "command": [
+          "which",
+          "apk"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "which: no apk in (/usr/local/bin:/opt/rh/gcc-toolset-14/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)\n"
+      },
+      {
+        "command": [
+          "which",
+          "dnf"
+        ],
+        "return_code": 0,
+        "stdout": "/usr/bin/dnf\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "which",
+          "pacman"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "which: no pacman in (/usr/local/bin:/opt/rh/gcc-toolset-14/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)\n"
+      },
+      {
+        "command": [
+          "which",
+          "zypper"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "which: no zypper in (/usr/local/bin:/opt/rh/gcc-toolset-14/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)\n"
+      },
+      {
+        "command": [
+          "which",
+          "emerge"
+        ],
+        "return_code": 1,
+        "stdout": "",
+        "stderr": "which: no emerge in (/usr/local/bin:/opt/rh/gcc-toolset-14/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)\n"
+      },
+      {
+        "command": [
+          "auditwheel",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "auditwheel 6.4.0 installed at\n/opt/_internal/pipx/venvs/auditwheel/lib/python3.12/site-packages/auditwheel\n(python 3.12)\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "patchelf",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "patchelf 0.17.2\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "git version 2.49.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "curl",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "curl 7.76.1 (s390x-ibm-linux-gnu) libcurl/7.76.1 OpenSSL/3.2.2 zlib/1.2.11 brotli/1.0.9 libidn2/2.3.0 libpsl/0.21.1 (+libidn2/2.3.0) libssh/0.10.4/openssl/zlib nghttp2/1.43.0\nRelease-Date: 2021-04-14\nProtocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mqtt pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp \nFeatures: alt-svc AsynchDNS brotli GSS-API HTTP2 HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM NTLM_WB PSL SPNEGO SSL TLS-SRP UnixSockets\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "autoconf",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "autoconf (GNU Autoconf) 2.72\nCopyright (C) 2023 Free Software Foundation, Inc.\nLicense GPLv3+/Autoconf: GNU GPL version 3 or later\n<https://gnu.org/licenses/gpl.html>, <https://gnu.org/licenses/exceptions.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by David J. MacKenzie and Akim Demaille.\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "automake",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "automake (GNU automake) 1.17\n\nCopyright (C) 2024 Free Software Foundation, Inc.\nLicense GPLv2+: GNU GPL version 2 or later\n  <https://gnu.org/licenses/gpl-2.0.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by Tom Tromey <tromey@redhat.com>\n       and Alexandre Duret-Lutz <adl@gnu.org>.\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "libtool",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "libtool (GNU libtool) 2.5.3\nWritten by Gordon Matzigkeit, 1996\n\nCopyright (C) 2024 Free Software Foundation, Inc.\n\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "sqlite3",
+          "--version"
+        ],
+        "return_code": 127,
+        "stdout": "OCI runtime exec failed: exec failed: unable to start container process: exec: \"sqlite3\": executable file not found in $PATH: unknown\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "openssl",
+          "version"
+        ],
+        "return_code": 0,
+        "stdout": "OpenSSL 3.2.2 4 Jun 2024 (Library: OpenSSL 3.2.2 4 Jun 2024)\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "pipx",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "1.7.1\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "pipx",
+          "list",
+          "--short"
+        ],
+        "return_code": 0,
+        "stdout": "auditwheel 6.4.0\ncmake 4.0.3\npatchelf 0.17.2.2\nswig 4.3.1\nuv 0.7.13\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "gcc",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "gcc (GCC) 14.2.1 20250110 (Red Hat 14.2.1-7)\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "sh",
+          "-c",
+          "ls -d /opt/python/*/bin/python"
+        ],
+        "return_code": 0,
+        "stdout": "/opt/python/cp310-cp310/bin/python\n/opt/python/cp311-cp311/bin/python\n/opt/python/cp312-cp312/bin/python\n/opt/python/cp313-cp313/bin/python\n/opt/python/cp313-cp313t/bin/python\n/opt/python/cp314-cp314/bin/python\n/opt/python/cp314-cp314t/bin/python\n/opt/python/cp38-cp38/bin/python\n/opt/python/cp39-cp39/bin/python\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.10.18\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp310-cp310/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\nsetuptools==80.9.0\ntomli==2.2.1\nwheel==0.45.1\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.11.13\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp311-cp311/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\nsetuptools==80.9.0\nwheel==0.45.1\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp312-cp312/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.12.11\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp312-cp312/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp313-cp313/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.13.5\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp313-cp313/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp313-cp313t/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.13.5\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp313-cp313t/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp314-cp314/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.14.0b3\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp314-cp314/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp314-cp314t/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.14.0b3\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp314-cp314t/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.8.20\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp38-cp38/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\nimportlib_metadata==8.5.0\npackaging==25.0\npip==25.0.1\npyproject_hooks==1.2.0\nsetuptools==75.3.2\ntomli==2.2.1\nwheel==0.45.1\nzipp==3.20.2\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "--version"
+        ],
+        "return_code": 0,
+        "stdout": "Python 3.9.23\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/opt/python/cp39-cp39/bin/python",
+          "-m",
+          "pip",
+          "list",
+          "--format=freeze"
+        ],
+        "return_code": 0,
+        "stdout": "build==1.2.2.post1\nimportlib_metadata==8.7.0\npackaging==25.0\npip==25.1.1\npyproject_hooks==1.2.0\nsetuptools==80.9.0\ntomli==2.2.1\nwheel==0.45.1\nzipp==3.23.0\n",
+        "stderr": ""
+      }
+    ]
+  }
+}
