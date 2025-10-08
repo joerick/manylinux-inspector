@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": 1759956484.0068948
+    "last_updated": 1759960079.489772
   },
   "data": {
     "quay.io/pypa/manylinux2014_x86_64": "2025.10.08-1",
@@ -36,7 +36,7 @@
     "quay.io/pypa/manylinux_2_28_i686": "2025.10.08-1",
     "quay.io/pypa/manylinux_2_34_i686": "2025.10.08-1",
     "quay.io/pypa/manylinux_2_39_aarch64": "2025.10.08-1",
-    "quay.io/pypa/manylinux_2_39_riscv64": "2025.10.05-1",
+    "quay.io/pypa/manylinux_2_39_riscv64": "2025.10.08-1",
     "quay.io/pypa/musllinux_1_2_riscv64": "2025.10.08-1",
     "quay.io/pypa/manylinux_2_39": "2025.10.05-1"
   }
