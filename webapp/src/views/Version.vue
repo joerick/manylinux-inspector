@@ -93,7 +93,7 @@ const pythonsTable = computed(() => {
           {{ version.date.toLocaleDateString(undefined, {dateStyle: 'full'}) }}
           ({{ timeAgo(version.date) }})
         </dd>
-        <dt>Github commit</dt>
+        <!-- <dt>Github commit</dt>
         <dd>
           <a :href="`https://github.com/pypa/manylinux/commit/${version.commit}`">
             <code>{{ version.commit }}</code>
@@ -103,7 +103,7 @@ const pythonsTable = computed(() => {
             Browse files
           </a>
 
-        </dd>
+        </dd> -->
       </dl>
       <h3>Images</h3>
       <table>
