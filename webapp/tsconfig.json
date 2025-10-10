@@ -6,6 +6,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "lib": ["es2018", "dom"],
 
     // workaround for https://github.com/vuejs/tsconfig/issues/6
     "preserveValueImports": false,

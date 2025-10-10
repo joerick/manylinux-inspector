@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue';
-import { VersionsIndex } from '@/model/VersionsIndex';
+import { VersionsIndex, type VersionRef } from '@/model/VersionsIndex';
 import { compareStandardNames, standards } from '@/model/standards';
 import { useAsyncState } from '@vueuse/core';
 import { computed } from 'vue';
@@ -30,13 +30,17 @@ const latestVersions = computed(() => {
   const index = indexLoader.state.value;
   if (!index) return {}
 
-  return groupBy(index.latestVersionRefs, ref => ref.name)
+  const refs = index.latestVersionRefs.slice()
+  refs.sort((a, b) => {
+    return b.tag.localeCompare(a.tag)
+  })
+
+  return groupBy(refs, ref => ref.name)
 }, {})
 
 function getStandardDescription(name: string) {
   return standards.find(s => s.name == name)?.description ?? null
 }
-
 </script>
 
 <template>
@@ -57,7 +61,7 @@ function getStandardDescription(name: string) {
         <div class="cards">
           <VersionCard v-for="version in latestVersions[standard.name]"
                        :version="version"
-                       :is-latest="true" />
+                       :latest-info="indexLoader.state.value?.latestInfo(version)" />
         </div>
         <div class="spacer" style="height: 10px"></div>
         <RouterLink :to="{ name: 'standard', params: { name: standard.name } }" >

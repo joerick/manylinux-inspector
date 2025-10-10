@@ -1,4 +1,5 @@
 import { Mutex } from "async-mutex"
+import { parseRepoName } from "./nameParsing"
 
 export interface VersionRef {
     domain: string
@@ -7,6 +8,10 @@ export interface VersionRef {
     tag: string
     archs: string[]
     filename: string
+}
+
+function versionRefImageRegex(versionRef: VersionRef) {
+    return new RegExp(`^${versionRef.domain}/${versionRef.org}/${versionRef.name}_(.+):${versionRef.tag}$`)
 }
 
 interface IndexJSON {
@@ -37,12 +42,23 @@ export class VersionsIndex {
     }
 
     latestImageIds: string[]
+    latest: {[standardName: string]: {[arch: string]: string}}
 
     constructor(readonly indexJSON: IndexJSON) {
         this.latestImageIds = Object.keys(indexJSON.latest.data).map(imageRepoName => {
             const tag = indexJSON.latest.data[imageRepoName]
             return `${imageRepoName}:${tag}`
         })
+        this.latest = {}
+        for (const repoName in indexJSON.latest.data) {
+            const tag = indexJSON.latest.data[repoName]
+            const repoNameParts = parseRepoName(repoName)
+            const standardName = repoNameParts.name
+            if (!(standardName in this.latest)) {
+                this.latest[standardName] = {}
+            }
+            this.latest[standardName][repoNameParts.arch] = tag
+        }
     }
 
     search(query: string): VersionRef[] {
@@ -70,6 +86,24 @@ export class VersionsIndex {
         })
     }
 
+    latestInfo(version: VersionRef): string | undefined {
+        const latestTagByArch = this.latest[version.name]
+        if (!latestTagByArch) {
+            return undefined
+        }
+
+        const latestArchs = [...Object.keys(latestTagByArch)]
+
+        if (latestArchs.every(arch => latestTagByArch[arch] == version.tag)) {
+            return 'latest'
+        }
+        const archsForWhomThisVersionIsLatest = latestArchs.filter(arch => latestTagByArch[arch] == version.tag)
+        if (archsForWhomThisVersionIsLatest.length > 0) {
+            return `latest for ${archsForWhomThisVersionIsLatest.join(', ')}`
+        }
+        return undefined
+    }
+
     get allVersionRefs(): VersionRef[] {
         return this.indexJSON.versions_reports
     }
@@ -78,14 +112,15 @@ export class VersionsIndex {
         return this.indexJSON.versions_reports.filter(versionRef => {
             // in the middle of the latest image id is the arch, but versions
             // aren't limited to just one arch.
-            const prefix = `${versionRef.domain}/${versionRef.org}/${versionRef.name}_`
-            const suffix = `:${versionRef.tag}`
+            // const prefix = `${versionRef.domain}/${versionRef.org}/${versionRef.name}_`
+            // const suffix = `:${versionRef.tag}`
+            const regex = versionRefImageRegex(versionRef)
 
             return this.latestImageIds.some(imageId => {
-                return imageId.startsWith(prefix) && imageId.endsWith(suffix)
+                return regex.test(imageId)
+                // return imageId.startsWith(prefix) && imageId.endsWith(suffix)
             })
         })
     }
 }
-
 

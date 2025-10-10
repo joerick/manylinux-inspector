@@ -6,7 +6,7 @@ import { computed } from 'vue';
 
 const props = defineProps<{
   version: Version|VersionRef,
-  isLatest?: boolean,
+  latestInfo?: string,
 }>()
 const date = computed(() => {
   const date = timeAgo(dateFromImageTag(props.version.tag))
@@ -21,7 +21,7 @@ const date = computed(() => {
       <div class="tag">{{ version.tag }}</div>
     </router-link>
     <div class="date">{{ date }}</div>
-    <div class="latest" v-if="isLatest">latest</div>
+    <div class="latest" v-if="latestInfo">{{latestInfo}}</div>
     <div class="spacer" style="height: 10px"></div>
     <div class="archs">Available for {{ version.archs.join(', ') }}</div>
   </div>

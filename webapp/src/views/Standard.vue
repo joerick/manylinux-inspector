@@ -15,6 +15,11 @@ const standard = computed(() => {
   return standards.find(s => s.name == standardName.value)
 })
 
+const indexLoader = useAsyncState(
+  VersionsIndex.get(),
+  null,
+)
+
 interface VersionRefWithLatest extends VersionRef {
   isLatest?: boolean
 }
@@ -63,7 +68,7 @@ const versions = standardVersionsLoader.state
       <div class="cards" v-if="versions">
         <VersionCard v-for="version in versions"
                      :version="version"
-                     :is-latest="version.isLatest" />
+                     :latest-info="indexLoader.state.value?.latestInfo(version)" />
       </div>
       <div class="spacer" style="height: 10px"></div>
       <RouterLink :to="{ name: 'grid', query: { q: standard.name } }" >
