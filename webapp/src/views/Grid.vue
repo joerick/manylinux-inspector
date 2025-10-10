@@ -51,8 +51,13 @@ interface VersionLoader {
 const versionCache = reactive<{[filename: string]: VersionLoader|undefined}>({})
 
 const versionLoaders = ref<VersionLoader[]>([])
-watch(versionRefs, versionRefs => {
+const maxVisibleVersions = ref<number>(50)
+const versionsWereTruncated = ref(false)
+
+watch([versionRefs, maxVisibleVersions], ([versionRefs, maxVisibleVersions]) => {
   const newVersions: VersionLoader[] = []
+  let i = 0
+  let truncated = false
   for (const versionRef of versionRefs) {
     let versionCacheItem = versionCache[versionRef.filename]
     if (!versionCacheItem) {
@@ -73,7 +78,13 @@ watch(versionRefs, versionRefs => {
 
     versionCache[versionRef.filename] = versionCacheItem
     newVersions.push(versionCacheItem)
+    i += 1
+    if (i > maxVisibleVersions) {
+      truncated = true
+      break
+    }
   }
+  versionsWereTruncated.value = truncated
   versionLoaders.value = newVersions
 })
 
@@ -239,6 +250,12 @@ function rowClicked(event: MouseEvent, field: FieldDescriptor) {
               {{ version.ref.name }}:<br>
               {{ version.ref.tag }}
             </router-link>
+          </th>
+          <th v-if="versionsWereTruncated">
+            +{{ versionRefs.length - maxVisibleVersions }} more...<br>
+            <button @click.prevent="maxVisibleVersions += 50">
+              Show more
+            </button>&nbsp;&nbsp;&nbsp;&nbsp;
           </th>
         </tr>
       </thead>
