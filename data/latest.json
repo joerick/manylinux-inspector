@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "last_updated": 1762502013.7505877
+    "last_updated": 1762512643.590126
   },
   "data": {
     "quay.io/pypa/manylinux2014_x86_64": "2025.11.07-1",
     "quay.io/pypa/manylinux2014_i686": "2025.11.07-1",
     "quay.io/pypa/manylinux2014_aarch64": "2025.11.07-1",
     "quay.io/pypa/manylinux2014_ppc64le": "2025.11.07-1",
-    "quay.io/pypa/manylinux2014_s390x": "2025.11.02-1",
+    "quay.io/pypa/manylinux2014_s390x": "2025.11.07-1",
     "quay.io/pypa/manylinux_2_28_x86_64": "2025.11.07-1",
     "quay.io/pypa/manylinux_2_28_aarch64": "2025.11.07-1",
     "quay.io/pypa/manylinux_2_28_ppc64le": "2025.11.07-1",
@@ -21,7 +21,7 @@
     "quay.io/pypa/manylinux_2_34_x86_64": "2025.11.07-1",
     "quay.io/pypa/manylinux_2_34_aarch64": "2025.11.07-1",
     "quay.io/pypa/manylinux_2_34_ppc64le": "2025.11.07-1",
-    "quay.io/pypa/manylinux_2_34_s390x": "2025.11.02-1",
+    "quay.io/pypa/manylinux_2_34_s390x": "2025.11.07-1",
     "quay.io/pypa/manylinux_2_31_armv7l": "2025.11.07-1",
     "quay.io/pypa/manylinux2014": "2025.11.02-1",
     "quay.io/pypa/manylinux_2_28": "2025.11.02-1",
